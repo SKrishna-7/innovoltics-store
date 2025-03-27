@@ -60,14 +60,14 @@ export default function ProductsPage() {
   });
 
   return (
-    <div className="bg-white font-poppins relative">
+    <div className="bg-white font-poppins relative mt-20 min-h-screen flex flex-col">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between border-b py-6">
           <h1 className="text-3xl font-bold text-purple-900">Our Products</h1>
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
-            className="lg:hidden p-2 text-gray-500 hover:text-gray-700"
+            className="lg:hidden p-2 text-gray-500 hover:text-gray-700 "
           >
             <FunnelIcon className="h-6 w-6" />
           </button>
@@ -75,16 +75,18 @@ export default function ProductsPage() {
         <div className="flex flex-col lg:flex-row mt-6">
           {/* Sidebar Filters */}
           <div
-            className={`absolute inset-0 bg-white w-64 p-4 border-r lg:relative  lg:block  lg:w-1/4 transition-transform  ${mobileFiltersOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+          className={`absolute inset-0 bg-white w-64 p-4 border-r lg:relative lg:block lg:w-1/4 transition-transform ${
+            mobileFiltersOpen ? "translate-x-0 z-50" : "-translate-x-full z-0"
+          } lg:translate-x-0 lg:z-0`}
           >
             <button
               className="lg:hidden mb-4 text-gray-500 hover:text-gray-700"
               onClick={() => setMobileFiltersOpen(false)}
             >
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon className="h-6 w-6 " />
             </button>
             {filters.map((section) => (
-              <div key={section.id} className="mb-4">
+              <div key={section.id} className="mb-4 ">
                 <h3 className="font-medium text-gray-900 mb-2">{section.name}</h3>
                 <div className="space-y-2">
                   {section.options.map((option) => (
@@ -104,20 +106,39 @@ export default function ProductsPage() {
           </div>
 
           {/* Product Grid */}
-          <div className="lg:w-3/4 px-4">
+          <div className="lg:w-3/4 px-4 ">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
-                    <Link href={`/productdetails/${product.id}`} key={product.id} className="border p-4 rounded-lg shadow-sm">
-                    <div className="bg-gray-200 h-40 mb-4">
-                        <Image src={product.img} width={300} height={300} alt={product.name}/>
-                    </div>
-                    <h2 className="text-lg font-medium text-gray-900">{product.name}</h2>
-                    <p className="text-sm text-gray-600">{product.category}</p>
-                    <p className="text-sm text-gray-600">Color: {product.color}</p>
-                    <p className="text-sm text-gray-600">Material: {product.material}</p>
-                    <button className="mt-2 text-indigo-600 hover:underline">View Details</button>
-                  </Link>
+                  <Link
+                  href={`/productdetails/${product.id}`}
+                  key={product.id}
+                  className="group bg-white border border-gray-200 p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  <div className="relative bg-gray-100 h-40 mb-5 rounded-lg overflow-hidden">
+                    <Image
+                      src={product.img}
+                      width={300}
+                      height={300}
+                      alt={product.name}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900 group-hover:text-purple-700 transition-colors duration-200">
+                    {product.name}
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">{product.category}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    <span className="font-medium text-gray-700">Color:</span> {product.color}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    <span className="font-medium text-gray-700">Material:</span> {product.material}
+                  </p>
+                  <button className="mt-3 text-purple-600 font-medium hover:text-purple-800 hover:underline transition-all duration-200">
+                    View Details
+                  </button>
+                </Link>
                 ))
               ) : (
                 <p className="text-gray-500">No products found</p>
@@ -129,3 +150,5 @@ export default function ProductsPage() {
     </div>
   );
 }
+
+

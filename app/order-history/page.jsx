@@ -61,7 +61,7 @@ const OrderHistoryPage = () => {
             </div>
           ) : (
             <div className="space-y-8">
-              {orders.map((order) => (
+              { orders?.length > 0 && orders?.map((order) => (
                 <div
                   key={order.id}
                   className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
@@ -91,7 +91,7 @@ const OrderHistoryPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Product Info */}
                     {
-                        order.products.map((product)=>(
+                        order?.products?.length > 0 && order?.products?.map((product)=>(
                             <div>
                       <h3 className="text-lg font-medium text-gray-900">Product Details</h3>
                       <dl className="mt-2 space-y-2 text-sm text-gray-600">
@@ -126,25 +126,25 @@ const OrderHistoryPage = () => {
                       <dl className="mt-2 space-y-2 text-sm text-gray-600">
                         <div className="flex">
                           <dt className="font-medium w-24">Name:</dt>
-                          <dd>{order.customer.name}</dd>
+                          <dd>{order?.customer?.name}</dd>
                         </div>
                         <div className="flex">
                           <dt className="font-medium w-24">Street:</dt>
-                          <dd>{order.customer.address}</dd>
+                          <dd>{order?.customer?.address}</dd>
                         </div>
                         <div className="flex">
                           <dt className="font-medium w-24">City:</dt>
-                          <dd>{order.customer.city}</dd>
+                          <dd>{order?.customer?.city}</dd>
                         </div>
                         <div className="flex">
                           <dt className="font-medium w-24">State/ZIP:</dt>
                           <dd>
-                            {order.customer.state} / {order.customer.zip}
+                            {order?.customer?.state} / {order?.customer?.zip}
                           </dd>
                         </div>
                         <div className="flex">
                           <dt className="font-medium w-24">Country:</dt>
-                          <dd>{order.customer.country}</dd>
+                          <dd>{order?.customer?.country}</dd>
                         </div>
                       </dl>
                     </div>

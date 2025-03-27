@@ -80,7 +80,7 @@ const handleConfirmOrder = (e) => {
   }, 3000);
 };
   return (
-    <div className="min-h-screen font-poppins pt-20">
+    <div className="min-h-screen font-poppins pt-20 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5">
@@ -90,16 +90,16 @@ const handleConfirmOrder = (e) => {
           </p>
 </div>
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 ">
           {/* Cart Section */}
-          <div className="lg:col-span-3 bg-white rounded-xl  p-6">
+          <div className="lg:col-span-3 bg-white rounded-xl border  p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-gray-900">Your Cart</h2>
               <span className="text-sm text-gray-500">{cart.length} Item{cart.length !== 1 ? 's' : ''}</span>
             </div>
 
             {cart.length === 0 ? (
-              <div className="text-center py-10">
+              <div className="text-center py-10 ">
                 <p className="text-gray-500">Your cart is empty.</p>
                 <Link href="/customize" className="mt-2 inline-block text-indigo-600 hover:text-indigo-800 font-medium">
                   Upload a model to get started
@@ -107,11 +107,11 @@ const handleConfirmOrder = (e) => {
               </div>
             ) : (
               <>
-                <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+                <div className="space-y-6 max-h-[60vh]  overflow-y-auto pr-2 ">
                   {cart.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors"
+                      className="flex items-center bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors "
                     >
                       <div className="flex-1">
                         <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
@@ -151,7 +151,7 @@ const handleConfirmOrder = (e) => {
                   <span>${total}</span>
                 </div>
                 <Link href="/upload-model">
-                  <button className="mt-4 w-full py-3 bg-indigo-100 text-indigo-700 font-medium rounded-md hover:bg-indigo-200 transition-colors">
+                  <button className="mt-4 w-full py-3 bg-purple-100 text-black-700 font-medium rounded-md hover:bg-indigo-200 transition-colors">
                     Add More Items
                   </button>
                 </Link>
@@ -159,7 +159,7 @@ const handleConfirmOrder = (e) => {
             )}
           </div>
         {cart.length > 0 ? <>
-          <div className="lg:col-span-2 bg-white rounded-xl p-6 sticky top-6">
+          <div className="lg:col-span-2 bg-gray-50 rounded-lg p-6 sticky top-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Shipping Details</h2>
             {errorMessage && (
               <p className="mb-4 text-sm text-red-600 bg-red-50 p-2 rounded-md">{errorMessage}</p>

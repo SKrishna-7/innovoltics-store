@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ShoppingCartIcon, UserIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "@/assets/images/logo.png";
 import { usePathname } from "next/navigation";
-
+import CartIconWithBadge from "@/components/CartBadge";
 export default function Navbar() {                                    
   const [menuOpen, setMenuOpen] = useState(false);               
   const [isScrolled, setIsScrolled] = useState(false);               
@@ -74,10 +74,12 @@ export default function Navbar() {
          <Link href=''>
           <UserIcon className={`w-6 h-6 cursor-pointer  ${isHomePage ? 'text-gray-100' : 'text-zinc-950'}  hover:text-black `} />
          </Link>
-         <Link href='/checkout'>
+         {/* <Link href='/checkout'>
           <ShoppingCartIcon className={`w-6 h-6 cursor-pointer ${isHomePage ? 'text-gray-100' : 'text-zinc-950'}   hover:text-black `} />
-         </Link>
-
+         </Link> */}
+         <div className="mt-1">
+         <CartIconWithBadge isHomePage={isHomePage} />
+         </div>
           <button className="md:hidden bg-purple-800 p-1 text-white rounded-sm" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <XMarkIcon className="w-6 h-6 " /> : <Bars3Icon className="w-6 h-6" />}
           </button>
@@ -86,7 +88,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col space-y-4 mt-8 text-center bg-gray-200">
+        <div className="md:hidden flex flex-col space-y-4 mt-8 text-center ">
           <Link href="/products" className="font-bold text-blue-900 hover:text-purple-800">Shop All</Link>
           <Link href="/products" className="hover:text-purple-800 ">3D Products</Link>
           <Link href="/products" className="hover:text-purple-800">Electronics</Link>
