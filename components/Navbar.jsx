@@ -6,6 +6,7 @@ import { ShoppingCartIcon, UserIcon, Bars3Icon, XMarkIcon } from "@heroicons/rea
 import logo from "@/assets/images/logo.png";
 import { usePathname } from "next/navigation";
 import CartIconWithBadge from "@/components/CartBadge";
+
 export default function Navbar() {                                    
   const [menuOpen, setMenuOpen] = useState(false);               
   const [isScrolled, setIsScrolled] = useState(false);               
@@ -39,12 +40,12 @@ export default function Navbar() {
       <div className="flex justify-between items-center">
         <div className="hidden md:flex space-x-4 text-[14px] flex-1  ">
           {/* <Link href="/products" className="font-bold text-blue-100 hover:text-purple-800">Shop All</Link> */}
-          <Link href="/products" className={`hover:text-purple-400 ${isHomePage ? 
-            '':'text-zinc-950'
+          <Link href="/products" className={`hover:text-purple-400 hidden ${isHomePage ? 
+            '':'text-zinc-950 '
           }`} >3D Products</Link>
           <Link href="/products" className={`hover:text-purple-400 ${isHomePage ? 
             '':'text-zinc-950'
-          }`}>Electronics</Link>
+          }`}>Our Products</Link>
           <Link href="/customize" className={`hover:text-purple-400 ${isHomePage ? 
             '':'text-puzincple-950'
           }`}>Custom Orders</Link>
@@ -71,7 +72,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex-1 flex justify-end items-center space-x-4">
-         <Link href=''>
+         <Link href='/login'>
           <UserIcon className={`w-6 h-6 cursor-pointer  ${isHomePage ? 'text-gray-100' : 'text-zinc-950'}  hover:text-black `} />
          </Link>
          {/* <Link href='/checkout'>
@@ -90,8 +91,8 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden flex flex-col space-y-4 mt-8 text-center ">
           <Link href="/products" className="font-bold text-blue-900 hover:text-purple-800">Shop All</Link>
-          <Link href="/products" className="hover:text-purple-800 ">3D Products</Link>
-          <Link href="/products" className="hover:text-purple-800">Electronics</Link>
+          {/* <Link href="/products" className="hover:text-purple-800 ">3D Products</Link> */}
+          <Link href="/products" className="hover:text-purple-800">Our Products</Link>
           <Link href="/customize" className="hover:text-purple-800">Custom Orders</Link>
           <Link href="/" className="hover:text-purple-800">About Us</Link>
         </div>

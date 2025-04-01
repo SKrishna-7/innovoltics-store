@@ -76,7 +76,7 @@ export default function Services() {
             </div>
 
             {/* Service 3: 3D Printing + Electronics */}
-            <div className="border-b-2 border-purple-500 mb-6 pb-6">
+            <div className="border-b-2 border-purple-500  pb-6">
               <h2 className="text-2xl sm:text-3xl font-semibold text-gray-100 mb-3">
                 3D Printing + Electronics
               </h2>

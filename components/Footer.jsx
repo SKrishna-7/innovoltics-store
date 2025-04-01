@@ -1,8 +1,9 @@
+import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'; // Install react-icons: npm install react-icons
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-12 font-poppins mt-10 ">
+    <footer className="bg-gray-900 text-white py-12 font-poppins mt-5 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -18,29 +19,29 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
             <ul className="mt-4 space-y-2 text-sm text-gray-300">
               <li>
-                <a href="/" className="hover:text-indigo-400 transition-colors">
+                <Link href="/" className="hover:text-indigo-400 transition-colors">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/products" className="hover:text-indigo-400 transition-colors">
+                <Link href="/products" className="hover:text-indigo-400 transition-colors">
                   Products
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/upload-model" className="hover:text-indigo-400 transition-colors">
+                <Link href="/customize" className="hover:text-indigo-400 transition-colors">
                   Upload Your Model
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/about" className="hover:text-indigo-400 transition-colors">
+                <Link href="/about" className="hover:text-indigo-400 transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contact" className="hover:text-indigo-400 transition-colors">
+                <Link href="/contact" className="hover:text-indigo-400 transition-colors">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -49,9 +50,9 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold text-white">Contact Us</h4>
             <ul className="mt-4 space-y-2 text-sm text-gray-300">
-              <li>Email: <a href="mailto:support@innovoltics.com" className="hover:text-indigo-400">support@innovoltics.com</a></li>
-              <li>Phone: <a href="tel:+1234567890" className="hover:text-indigo-400">+1 (234) 567-890</a></li>
-              <li>Address: 123 Innovation Drive, Tech City, TC 45678</li>
+              <li>Email: <a href="mailto:innovoltics@gmail.com" className="hover:text-indigo-400">innovoltics@gmail.com</a></li>
+              <li>Phone: <a href="tel:+1234567890" className="hover:text-indigo-400">+91 80723 57029</a></li>
+              <li>Address: 177/82, South avenue road, phase 1, sathuvachari, vellore, Tamil Nadu, 632009, India</li>
             </ul>
           </div>
 
@@ -59,16 +60,16 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold text-white">Follow Us</h4>
             <div className="mt-4 flex space-x-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
+              <a href="https://www.instagram.com/innovoltics?igsh=MThxc293ZGR5cHhzeA==" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
                 <FaFacebook size={24} />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
+              <a href="https://www.instagram.com/innovoltics?igsh=MThxc293ZGR5cHhzeA==" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
                 <FaTwitter size={24} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
+              <a href="https://www.instagram.com/innovoltics?igsh=MThxc293ZGR5cHhzeA==" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
                 <FaInstagram size={24} />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
+              <a href="https://www.instagram.com/innovoltics?igsh=MThxc293ZGR5cHhzeA==" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-indigo-400 transition-colors">
                 <FaLinkedin size={24} />
               </a>
             </div>

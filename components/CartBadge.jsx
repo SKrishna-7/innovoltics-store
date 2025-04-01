@@ -2,10 +2,10 @@
 
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useCart } from "@/components/CartContext"; // Assuming you have this context
-
+import { useContext } from "react"; 
+import { CartContext } from "@/store/CartContext";    
 const CartIconWithBadge = ({ isHomePage }) => {
-  const { cart } = useCart(); // Access cart from context (adjust based on your setup)
+  const { cart } = useContext(CartContext); // Access cart from context (adjust based on your setup)
   const cartItemCount = cart.length; // Assuming cart is an array of items
 
   return (

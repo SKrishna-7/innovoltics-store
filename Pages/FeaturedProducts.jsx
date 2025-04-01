@@ -109,53 +109,71 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+import { ProductContext } from "@/store/ProductContext";
 
 // Data for the cards (similar to the image)
-const featuredItems = [
-  {
-        id: 0,
-        name: "Mini drone frame without propeller guard",
-        href: "/products/0",
-        price: "100 rs",
-        imageSrc: "/images/DF.png",
-        imageAlt: "Mini drone frame without propeller guard.",
-      },
-      {
-        id: 1,
-        name: "Mini drone frame without propeller guard",
-        href: "/products/1",
-        price: "100 rs",
-        imageSrc: "/images/DF.png",
-        imageAlt: "Mini drone frame without propeller guard.",
-      },
-      {
-        id: 2,
-        name: "Mini drone frame without propeller guard",
-        href: "/products/2",
-        price: "100 rs",
-        imageSrc: "/images/DF.png",
-        imageAlt: "Mini drone frame without propeller guard.",
-      },
-      {
-        id: 3,
-        name: "Mini drone frame without propeller guard",
-        href: "/products/3",
-        price: "100 rs",
-        imageSrc: "/images/DF.png",
-        imageAlt: "Mini drone frame without propeller guard.",
-      },
-      {
-        id: 4,
-        name: "Mini drone frame without propeller guard",
-        href: "/products/4",
-        price: "100 rs",
-        imageSrc: "/images/DF.png",
-        imageAlt: "Mini drone frame without propeller guard.",
-      },
-];
+// const featuredItems = [
+//   {
+//         id: 0,
+//         name: "Mini drone frame without propeller guard",
+//         href: "/products/0",
+//         price: "100 rs",
+//         imageSrc: "/images/DF.png",
+//         imageAlt: "Mini drone frame without propeller guard.",
+//       },
+//       {
+//         id: 1,
+//         name: "Mini drone frame without propeller guard",
+//         href: "/products/1",
+//         price: "100 rs",
+//         imageSrc: "/images/DF.png",
+//         imageAlt: "Mini drone frame without propeller guard.",
+//       },
+//       {
+//         id: 2,
+//         name: "Mini drone frame without propeller guard",
+//         href: "/products/2",
+//         price: "100 rs",
+//         imageSrc: "/images/DF.png",
+//         imageAlt: "Mini drone frame without propeller guard.",
+//       },
+//       {
+//         id: 3,
+//         name: "Mini drone frame without propeller guard",
+//         href: "/products/3",
+//         price: "100 rs",
+//         imageSrc: "/images/DF.png",
+//         imageAlt: "Mini drone frame without propeller guard.",
+//       },
+//       {
+//         id: 4,
+//         name: "Mini drone frame without propeller guard",
+//         href: "/products/4",
+//         price: "100 rs",
+//         imageSrc: "/images/DF.png",
+//         imageAlt: "Mini drone frame without propeller guard.",
+//       },
+// ];
+import { isValidUrl } from "@/utils/ValidURL";
+import { Spinner } from "@/components/Spinner";
 
 const FeaturedCardSection = () => {
+
+  const {products, loading} = useContext(ProductContext);
+  if(loading){
+    return <Spinner />
+  } 
+  const featuredItems = products.slice(0, 5);
+
+  if (featuredItems.length===0){
+      return <div className=""></div>
+  }
+
+  console.log(featuredItems);
   return (
+
+
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">
         Featured Items
@@ -163,15 +181,15 @@ const FeaturedCardSection = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {featuredItems.map((item) => (
           <Link
-          href={`/productdetails/${item.id}`}
-            key={item.id}
+          href={`/productdetails/${item._id}`}
+            key={item._id}
             className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border"
           >
             {/* Image Section */}
             <div className="relative w-full h-48 sm:h-56 lg:h-64 bg-gray-100 rounded-t-xl">
               <Image
-                src={item.imageSrc}
-                alt={item.imageAlt}
+                src={isValidUrl(item?.image[0]) ? item?.image[0] : '/images/DF.png'}
+                alt={item.imageAlt ? item.imageAlt : 'Mini drone frame without propeller guard.'}
                 fill
                 className="object-cover rounded-t-xl"
               />
@@ -192,8 +210,11 @@ const FeaturedCardSection = () => {
           </Link>
         ))}
       </div>
-    </div>
-  );
+      </div>
+  
+      
+
+    )
 };
 
 export default FeaturedCardSection;

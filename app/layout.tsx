@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 
 import Navbar from '../components/Navbar'
 import Footer from '@/components/Footer'
-import {CartProvider} from '@/components/CartContext'
+// import {CartProvider} from '@/components/CartContext
+import {Provider} from '@/store/Provider'
+
 
 export default function RootLayout({
   children,
@@ -19,11 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-       <CartProvider>
+       <Provider>
          <Navbar />
            {children}
          <Footer/>
-        </CartProvider> 
+        </Provider> 
       </body>
     </html>
   )

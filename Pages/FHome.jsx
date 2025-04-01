@@ -126,7 +126,7 @@ const HomePage = () => {
 
         {/* Right Section: STL Viewer (Unchanged Structure) */}
         <div className="w-[90%] rounded-3xl lg:w-[45%] h-[300px] lg:h-[70%] lg:rounded-3xl bg-gray-800 ">
-          <STLViewer />
+          <STLViewer url="Models/df.stl" />
           <div className="py-2 px-5 w-full flex justify-end">
             <Link
               href=""

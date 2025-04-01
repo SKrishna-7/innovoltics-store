@@ -1,11 +1,11 @@
 'use client';
 
-import { useState , useEffect } from 'react';
-import { useCart } from '@/components/CartContext'; // Verify this path matches your project structure
+import { useState , useEffect,useContext } from 'react';
 import STLViewer from '@/components/HomeModel';
 import Link from 'next/link';
 import { TrashIcon, CheckCircleIcon } from '@heroicons/react/20/solid';
-
+import { CartContext } from '@/store/CartContext';
+import axios from 'axios';
 
 const UploadModelPage = () => {
   const [file, setFile] = useState(null);
@@ -14,95 +14,104 @@ const UploadModelPage = () => {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [message, setMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
-  const { addToCart } = useCart();
-
+  const [selectedDiameter, setSelectedDiameter] = useState(null);
+  const [customDiameter, setCustomDiameter] = useState('');
+  const { addToCart } = useContext(CartContext);
+  const [requirements, setRequirements] = useState('');
+  const [basePrice, setBasePrice] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const colors = [
-    { name: 'White', class: 'bg-white', selectedClass: 'ring-gray-400' },
-    { name: 'Black', class: 'bg-black', selectedClass: 'ring-gray-900' },
-    { name: 'Red', class: 'bg-red-500', selectedClass: 'ring-red-500' },
-    { name: 'Blue', class: 'bg-blue-500', selectedClass: 'ring-blue-500' },
-  ];
-
-  const sizes = [
-    { name: 'Small', inStock: true },
-    { name: 'Medium', inStock: true },
-    { name: 'Large', inStock: true },
-    { name: 'Custom', inStock: false },
-  ];
+    { name: 'White', selectedClass: 'ring-2 ring-offset-1 ring-purple-600', class: 'bg-white' },
+    { name: 'Black', selectedClass: 'ring-2 ring-offset-1 ring-purple-600', class: 'bg-black' },
+    { name: 'Red', selectedClass: 'ring-2 ring-offset-1 ring-purple-600', class: 'bg-red-500' },
+    { name: 'Blue', selectedClass: 'ring-2 ring-offset-1 ring-purple-600', class: 'bg-blue-500' },
+    
+  ]
 
   const materials = [
     { name: 'PLA', inStock: true },
     { name: 'ABS', inStock: true },
     { name: 'PETG', inStock: true },
-  ];
+    { name: 'TPU', inStock: true },
+    
+  ]
 
+  const diameter= [
+    { name: '10', inStock: true },
+    { name: '15', inStock: true },
+    { name: '20', inStock: true },
+    { name: '25', inStock: true },
+    
+  ]
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
-    if (uploadedFile && uploadedFile.name.endsWith('.stl')) {
+    if (uploadedFile) {
       setFile(uploadedFile);
       const url = URL.createObjectURL(uploadedFile);
       setModelUrl(url);
       setMessage('');
     } else {
       setFile(null);
-      setModelUrl('');
+      // setModelUrl('');
       setMessage('Please upload a valid .stl file');
+      setError('Please upload a valid .stl file');
     }
   };
 
-  // const handleAddToCart = (e) => {
-  //   e.preventDefault();
-  //   if (!file || !selectedColor || !selectedSize || !selectedMaterial) {
-  //     setMessage('Please fill in all required fields');
-  //     return;
-  //   }
-
-  //   const cartItem = {
-  //     name: file.name,
-  //     color: selectedColor.name,
-  //     size: selectedSize.name,
-  //     material: selectedMaterial.name,
-  //     model:modelUrl,
-  //     quantity: 1,
-  //     price:29
-  //   };
-
-  //   addToCart(cartItem);
-  //   setMessage(`Added ${file.name} to cart!`);
-  //   setIsModalOpen(true); // Open the modal
-  //   setTimeout(() => {
-  //     setIsModalOpen(false); // Close modal after 3 seconds
-  //     setMessage('');
-  //     // Reset form
-  //     setFile(null);
-  //     setModelUrl('');
-  //     setSelectedColor(null);
-  //     setSelectedSize(null);
-  //     setSelectedMaterial(null);
-  //   }, 5000);
-  // };
-  const handleAddToCart = (e) => {
+  
+  const handleAddToCart = async (e) => {
     e.preventDefault();
     
     if (!file || !selectedColor  || !selectedMaterial) {
       setMessage('Please fill in all required fields');
       return;
     }
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('color', selectedColor.name);
+    formData.append('price', basePrice || 29);
+    formData.append('material', selectedMaterial.name);
+    formData.append('diameter', selectedDiameter || customDiameter);
+    formData.append('requirements', requirements);
+    console.log(formData)
+
+    console.log(file)
   
-    const cartItem = {
-      name: file.name,
-      color: selectedColor.name,
-      material: selectedMaterial.name,
-      model: modelUrl,
-      quantity: 1,
-      price: 29
-    };
-  
-    addToCart(cartItem);
-    setMessage(`Added ${file.name} to cart!`);
-    setIsModalOpen(true);
+    try{
+      setLoading(true)
+      const response = await axios.post('http://localhost:8000/api/upload-model/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // Add Authorization header if your API requires it
+          // 'Authorization': `Bearer ${yourToken}`
+        },    
+      });
+      console.log(response)
+      const { message, cart_item } = response.data;
+
+      // Add the item to the cart context
+      addToCart(cart_item);
+
+      // Show success message and open modal
+      setMessage(message);
+      setIsModalOpen(true);
+      console.log(response)
+      setMessage(`Added ${file.name} to cart!`);
+
+    } catch (error) {
+      console.log('Error uploading model:', error);
+      setError('Error uploading model');
+    } finally {
+      setLoading(false);
+    }
+
+
   };
-  
+  if(error){
+    alert(error)
+  }
   // **Auto-close modal when `isModalOpen` changes**
   useEffect(() => {
     if (!isModalOpen) return; // ✅ Prevents running when modal is already closed
@@ -113,7 +122,7 @@ const UploadModelPage = () => {
       
       // ✅ Reset form fields after modal closes
       setFile(null);
-      setModelUrl('');
+      // setModelUrl('');
       setSelectedColor(null);
       setSelectedMaterial(null);
   
@@ -124,10 +133,10 @@ const UploadModelPage = () => {
   }, [isModalOpen]); // ✅ Runs whenever `isModalOpen` changes
   
   return (
-    <div className="bg-white min-h-screen font-poppins">
+    <div className="bg-white min-h-screen font-poppins mt-20">
       <div className="pt-6 px-4 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb">
-          <ol className="mx-auto flex max-w-2xl items-center space-x-2">
+          <ol className="  flex items-center   space-x-2">
             <li className="flex items-center">
               <Link href="/" className="mr-2 text-sm font-medium text-gray-900">
                 Home
@@ -142,15 +151,17 @@ const UploadModelPage = () => {
           </ol>
         </nav>
 
+        
+
         <div className="mx-auto max-w-2xl pt-10 pb-16 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8">
           <div className="lg:col-span-2">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Upload Your 3D Model</h1>
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Upload Your .stl File</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Upload Your 3d model</label>
               <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-indigo-500 transition-colors">
                 <input
                   type="file"
-                  accept=".stl"
+                  accept=".stl , .obj , .glb , .gltf"
                   onChange={handleFileChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
@@ -167,7 +178,7 @@ const UploadModelPage = () => {
                     Drag and drop your .stl file here, or{' '}
                     <span className="text-indigo-600 font-medium hover:text-indigo-500">click to browse</span>
                   </p>
-                  <p className="mt-1 text-xs text-gray-500">Only .stl files supported</p>
+                  <p className="mt-1 text-xs text-gray-500">Only .stl , .obj , .glb , .gltf , .fbx files supported</p>
                 </div>
               </div>
               {file && <p className="mt-2 text-sm text-gray-600">Uploaded: <span className="font-medium">{file.name}</span></p>}
@@ -177,6 +188,36 @@ const UploadModelPage = () => {
                 <STLViewer colors={selectedColor?.name || 'White'} model={modelUrl} />
               </div>
             )}
+           <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-900">What’s Your Base Price? (₹)</h3>
+                <div className="mt-2 relative">
+                  <input
+                    type="number"
+            
+                    value={basePrice}
+                    onChange={(e) => setBasePrice(e.target.value)}
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                    placeholder="Enter base price (e.g., 29)"
+                    min="30"
+                    step="5"
+                  />
+                  <span className="absolute inset-y-0 right-3 flex items-center text-gray-500">₹</span>
+                </div>
+                {basePrice && parseFloat(basePrice) < 30 && (
+                  <p className="mt-1 text-xs text-red-600">Price must be greater than 30 (₹)</p>
+                )}
+              </div>
+            <div className="mt-6">
+              <h3 className="text-sm font-medium text-gray-900">Write your requirements</h3>
+              <textarea
+                value={requirements}
+                onChange={(e) => setRequirements(e.target.value)}
+                className="mt-2 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter your requirements"
+              />
+            </div>
+
+            
           </div>
 
           <div className="mt-4 lg:mt-0">
@@ -235,9 +276,10 @@ const UploadModelPage = () => {
                       type="button"
                       disabled={!material.inStock}
                       onClick={() => material.inStock && setSelectedMaterial(material)}
-                      className={`group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                        material.inStock ? 'cursor-pointer bg-white text-gray-900 shadow-sm' : 'cursor-not-allowed bg-gray-50 text-gray-200'
-                      } ${selectedMaterial?.name === material.name && material.inStock ? 'border-indigo-500 ring-2' : 'border-gray-200'}`}
+                      className={`group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium hover:bg-gray-50  ${
+                        material.inStock ? 'cursor-pointer  text-gray-900 shadow-sm' : 'cursor-not-allowed bg-gray-50 text-gray-200'
+                      } ${selectedMaterial?.name === material.name && material.inStock ?  "border-purple-600 bg-purple-100 text-gray-900"
+                          : "border-gray-300 bg-white text-gray-900 hover:bg-gray-100"}`}
                     >
                       <span>{material.name}</span>
                       {!material.inStock && (
@@ -251,14 +293,54 @@ const UploadModelPage = () => {
                   ))}
                 </div>
               </div>
-
+                
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-900">Diameter (mm)</h3>
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {diameter?.map((dia) => (
+                    <button
+                      key={dia.name}
+                      type="button"
+                      onClick={() => {
+                        setSelectedDiameter(dia.name);
+                        setCustomDiameter("");
+                      }}
+                      className={`relative px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 border ${
+                        selectedDiameter === dia.name
+                          ? "border-purple-600 bg-purple-100 text-gray-900"
+                          : "border-gray-300 bg-white text-gray-900 hover:bg-gray-100"
+                      }`}
+                    >
+                      {dia.name} mm
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-4">
+                  <label className="text-sm font-medium text-gray-900">Custom Diameter (mm)</label>
+                  <input
+                    type="number"
+                    value={customDiameter}
+                    onChange={(e) => {
+                      setCustomDiameter(e.target.value);
+                      setSelectedDiameter(null);
+                    }}
+                    className="mt-2 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter custom diameter"
+                    min="0"
+                    step="0.1"
+                  />
+                </div>
+              </div>
               <button
                 type="submit"
+                disabled={loading}
+                onClick={handleAddToCart}
+                value={loading ? 'Adding...' : 'Add to Cart'}
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Add to Cart
+                    {loading ? 'Adding...' : 'Add to Cart'}
               </button>
-            </form>
+            </form> 
             {message && !isModalOpen && (
               <p className="mt-4 text-center text-sm text-gray-600">{message}</p>
             )}
@@ -277,7 +359,7 @@ const UploadModelPage = () => {
           <span className="font-medium">{file?.name}</span> has been successfully added to your cart!
           </p>
           <div className="mt-6 flex justify-center space-x-4">
-            <Link href="/order-history">
+            <Link href="/checkout">
               <button className="px-6 py-2 bg-indigo-100 text-indigo-700 font-medium rounded-md hover:bg-indigo-200 transition-colors">
                 View Cart
               </button>
