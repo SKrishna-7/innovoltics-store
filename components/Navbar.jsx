@@ -89,7 +89,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col space-y-4 mt-8 text-center ">
+        <div className="md:hidden flex flex-col space-y-4 mt-8 text-center bg-zinc-950 ">
           <Link href="/products" className="font-bold text-blue-900 hover:text-purple-800">Shop All</Link>
           {/* <Link href="/products" className="hover:text-purple-800 ">3D Products</Link> */}
           <Link href="/products" className="hover:text-purple-800">Our Products</Link>
