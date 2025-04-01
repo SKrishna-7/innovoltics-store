@@ -77,7 +77,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <section className="w-full py-24  font-poppins text-center lg:mb-10 lg:mt-10 mb-10 mt-10">
+      <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mb-10 mt-10">
         <div className="max-w-3xl mx-auto px-6">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-wide mb-4">
             Ready to Create?
