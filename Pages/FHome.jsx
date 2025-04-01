@@ -8,13 +8,13 @@ import STLViewer from "@/components/HomeModel";
 const HomePage = () => {
   return (
     <>
-      <div className="w-full min-h-screen lg:p-10 flex flex-col items-center font-poppins relative bg-gray-900 pb-20 pt-20">
+      <div className="w-full min-h-screen flex flex-col items-center font-poppins relative bg-gray-900 pb-20 pt-20">
         {/* Cosmic Galaxy Background Gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0"></div>
 
-        <div className="w-full max-w-[95%] flex flex-col lg:flex-row justify-between items-center relative z-10 sm:pt-20 px-4 lg:px-0">
+        <div className="w-full max-w-9xl lg:max-w-9xl flex flex-col lg:flex-row justify-between items-center relative z-10 px-4 sm:px-6 lg:px-10 pt-20 gap-8">
           {/* Left Section: Text and Social Icons */}
-          <div className="w-full lg:w-[60%] p-5 lg:p-10 space-y-5 lg:mt-10 ">
+          <div className="w-full lg:w-3/5 p-5 space-y-6">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-wider font-kanit text-gray-100">
               Bringing Your 3D Printing and Electronics Ideas to Life!
             </h1>
@@ -36,20 +36,32 @@ const HomePage = () => {
 
             {/* Social Icons */}
             <div className="flex space-x-4">
-              <a href="https://instagram.com" target="_blank" className="p-2 bg-red-600 rounded-xl hover:bg-red-700 transition-colors">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                className="p-2 bg-red-600 rounded-xl hover:bg-red-700 transition-colors"
+              >
                 <FaInstagram className="text-white" fontSize={20} />
               </a>
-              <a href="https://linkedin.com" target="_blank" className="p-2 bg-blue-700 rounded-xl hover:bg-blue-800 transition-colors">
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                className="p-2 bg-blue-700 rounded-xl hover:bg-blue-800 transition-colors"
+              >
                 <FaLinkedinIn className="text-white" fontSize={20} />
               </a>
-              <a href="https://youtube.com" target="_blank" className="p-2 bg-red-500 rounded-xl hover:bg-red-600 transition-colors">
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                className="p-2 bluff2 bg-red-500 rounded-xl hover:bg-red-600 transition-colors"
+              >
                 <FaYoutube className="text-white" fontSize={20} />
               </a>
             </div>
           </div>
 
           {/* Right Section: STL Viewer */}
-          <div className="w-full lg:w-[500px]  lg:block h-[40vh] mt-10 lg:h-[400px] bg-gray-800 rounded-3xl overflow-hidden">
+          <div className="w-full lg:w-2/5 h-[40vh] sm:h-[50vh] lg:h-[60vh] max-h-[500px] bg-gray-800 rounded-3xl overflow-hidden flex flex-col">
             <STLViewer url="Models/df.stl" />
             <div className="py-2 px-5 w-full flex justify-end">
               <Link
@@ -73,7 +85,7 @@ const HomePage = () => {
             Upload your 3D model or contact us for custom electronics today.
           </p>
           <Link href="/customize">
-            <button className="px-8 py-3 bg-purple-700 text-white font-normal rounded-lg hover:bg-purple-800  backdrop-blur-md opacity-90 transition-all duration-300 hover:shadow-lg">
+            <button className="px-8 py-3 bg-purple-700 text-white font-normal rounded-lg hover:bg-purple-800 transition-all duration-300 hover:shadow-lg">
               Upload Your Model
             </button>
           </Link>
