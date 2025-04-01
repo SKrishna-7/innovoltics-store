@@ -10,7 +10,8 @@ const HomePage = () => {
     <>
       <div className="w-full min-h-screen flex flex-col items-center font-poppins relative bg-gray-900 pb-20 pt-20">
         {/* Cosmic Galaxy Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-800 z-0"></div>
+        <div className="absolute lg:block hidden inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0"></div>
+        <div className="absolute lg:hidden block inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0"></div>
 
         <div className="w-full max-w-9xl lg:max-w-7xl flex flex-col lg:flex-row justify-between items-center relative z-10 px-4 sm:px-6 lg:px-10 pt-20 gap-8">
           {/* Left Section: Text and Social Icons */}
