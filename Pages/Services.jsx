@@ -20,7 +20,7 @@ export default function Services() {
             </p>
             <Link
               href="/products"
-              className="text-sm px-4 py-2 bg-purple-800 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center w-max"
+              className="text-sm px-4 py-2 w-fit  bg-purple-800 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center "
             >
               View All Collections
               <ArrowRightIcon width={20} height={15} className="ml-2" />
