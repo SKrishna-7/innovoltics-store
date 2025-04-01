@@ -37,15 +37,19 @@ export default function AdminSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [token, setToken] = useState(null);
   const router = useRouter();
 
-  const token = localStorage.getItem("access_token");
-
+  
   // Verify admin status on page load
   useEffect(() => {
-    if (!token) {
-      router.push("/auth"); // Redirect to login if no token
-      return;
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      setToken(token);
+      if (!token) {
+        router.push("/login"); // Redirect to login if no token
+            return;
+      }
     }
 
     const checkAdmin = async () => {
@@ -54,7 +58,7 @@ export default function AdminSignupPage() {
         setIsAuthorized(true);
       } catch (err) {
         setError("You are not authorized to access this page.");
-        router.push("/auth"); // Redirect to login if not admin
+        router.push("/login"); // Redirect to login if not admin
       }
     };
 

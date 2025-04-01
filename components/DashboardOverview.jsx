@@ -17,23 +17,27 @@ export default function DashboardOverview() {
   const [error, setError] = useState(null);
   const { getOrders ,orders} = useContext(OrderContext);
   const { products, productLoading, error: productError  } = useContext(ProductContext);
+  const [token, setToken] = useState(null);
   const router = useRouter();
 
-  async function fetchOrders(token) {
-     await getOrders(token)
-  }
+  
   console.log(orders)
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      setToken(token);
+      const role = localStorage.getItem("role");
+      if (!token || role !== "admin") {
       setError("No token found");
       router.push("/");
       return;
-    } 
+        }
+    }
     fetchOrders(token);
   }, []);
-  
+  async function fetchOrders(token) {
+    await getOrders(token)
+ }
   const totalOrders = orders.length;
   const completedOrders = orders.filter((o) => o.status === 'Delivered').length;
   // const revenue = orders.reduce((sum, o) => sum + o.total_price, 0);

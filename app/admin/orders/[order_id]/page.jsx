@@ -12,6 +12,7 @@ export default function OrderDetails() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [OrderError, setOrderError] = useState(null);
+  const [token, setToken] = useState(null);
   const router = useRouter();
   const { order_id } = useParams();
 
@@ -21,13 +22,15 @@ export default function OrderDetails() {
  
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
-      router.push("/"); // Redirect to home if not admin
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      setToken(token);
+      const role = localStorage.getItem("role");
+      if (!token || role !== "admin") {
+        router.push("/"); // Redirect to home if not admin
     } else {
       fetchOrderDetails(token);
-    }
+    }}
   }, [order_id, router]);
 
   const fetchOrderDetails = async (token) => {

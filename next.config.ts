@@ -17,8 +17,7 @@ const nextConfig = {
       }
       
     ],
-    
-  },
+  }
   
 };
 

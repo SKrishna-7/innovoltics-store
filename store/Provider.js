@@ -10,9 +10,8 @@ export const Provider = ({ children }) => {
         <OrderProvider>
        <ProductProvider>
         <CartProvider>
-                <ProviderContext.Provider value={{}}>
+                <ProviderContext.Provider>
                     {children}
-
                 </ProviderContext.Provider>
         </CartProvider>
        </ProductProvider>    

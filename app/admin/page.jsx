@@ -6,7 +6,6 @@ import Sidebar from '../../components/Sidebar';
 import DashboardOverview from '../../components/DashboardOverview.jsx';
 import ProductManagement from '../../components/ProductManagement';
 import OrderManagement from '../../components/OrderManagement';
-import UserManagement from '../../components/UserManagement';
 import Messages from '../../components/Messages';
 import AdminSignupPage from '../signup/page';
 import { useRouter } from 'next/navigation';
@@ -27,7 +26,6 @@ export default function Dashboard() {
       case 'overview': return <DashboardOverview />;
       case 'products': return <ProductManagement />;
       case 'orders': return <OrderManagement />;
-      case 'users': return <UserManagement />;
       case 'messages': return <Messages />;
       case 'signup': return <AdminSignupPage />;
     }

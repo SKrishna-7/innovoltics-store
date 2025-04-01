@@ -1,7 +1,7 @@
 "use client";
 
 import Home from '@/Pages/Home/Home'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 // import ClientWrapper from '@/Components/ClientWrapper'
 const Index = () => {
 

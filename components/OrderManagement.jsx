@@ -12,12 +12,16 @@ export default function OrderManagement() {
   const router = useRouter();
   const { orders, loading, getOrders ,error} = useContext(OrderContext);
   const [OrderError, setOrderError] = useState(null);
+  const [token, setToken] = useState(null);
   // Check admin authentication on mount
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
-      router.push("/"); // Redirect to home if not admin
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      setToken(token);
+      const role = localStorage.getItem("role");
+      if (!token || role !== "admin") {
+        router.push("/"); // Redirect to home if not admin
+      }
     }
   }, [router]);
 
@@ -29,7 +33,7 @@ export default function OrderManagement() {
   const refreshOrders = async () => {
     setOrderError(null);
     try {
-      const token = localStorage.getItem("access_token");
+      
       await getOrders(token); // Pass token to context function
     } catch (err) {
       setOrderError(err?.response?.data?.detail || "Failed to fetch orders");

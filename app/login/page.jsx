@@ -4,22 +4,29 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
-export async function loginUser({ email, password }) {
-  const response = await fetch("http://localhost:8000/api/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+async function loginUser(email, password ) {
+
+  try {
+    const response = await fetch("http://localhost:8000/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
   const data = await response.json();
   if (!response.ok) throw new Error(data.detail || "Login failed");
   return data;
-}
+  } catch (error) {
+    setError(error.message || "Login failed.");
+    return ;
+  }
+} 
 
-export async function mergeGuest(guestId, token) {
-  const response = await fetch("http://localhost:8000/api/auth/mergeguest", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+async function mergeGuest(guestId, token) {
+  try {
+    const response = await fetch("http://localhost:8000/api/auth/mergeguest", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": `Bearer ${token}`,
     },
     body: new URLSearchParams({ guest_id: guestId }),
@@ -27,7 +34,11 @@ export async function mergeGuest(guestId, token) {
   const data = await response.json();
   if (!response.ok) throw new Error(data.detail || "Merge failed");
   return data;
-}
+  } catch (error) {
+    setError("Failed to merge guest data: " + error.message);
+    return ;
+  }
+} 
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -37,17 +48,19 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const token = localStorage.getItem("access_token");
-  const role = localStorage.getItem("role");
-  if (token && role === "admin") {
-   return router.push("/admin");
-  }
 
   useEffect(() => {
     if (!localStorage.getItem("guest_id") && !localStorage.getItem("user_id")) {
       console.log("No guest or user id found");
+      }
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      const role = localStorage.getItem("role");
+      if (token && role === "admin") {
+        return router.push("/admin");
+      }
     }
-  }, []);
+  }, [router]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

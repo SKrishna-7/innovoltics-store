@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 console.log("admin layout")
@@ -20,12 +20,15 @@ async function verifyAdmin(token) {
 
 export default function AdminLayout({ children }) {
   const router = useRouter();
-  const token = localStorage.getItem("access_token");
-
+  const [token, setToken] = useState(null);
   useEffect(() => {
-    if (!token) {
-      router.push("/login");
-      return;
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      setToken(token);
+        if (!token) {
+        router.push("/login");
+        return;
+      }
     }
 
     const checkAdmin = async () => {

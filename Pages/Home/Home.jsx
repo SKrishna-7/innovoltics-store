@@ -3,7 +3,7 @@
 import FHome from '../FHome'
 import Services from '../Services'
 import Featured from '../FeaturedProducts'
-import Products from '../Products'
+// import Products from '../Products'
 export default function Home() {
   return (
     

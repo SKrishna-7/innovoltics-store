@@ -31,19 +31,23 @@ const EditProductPage = () => {
   const [uploadedData, setUploadedData] = useState(null);
   const router = useRouter();
   const { product_id } = useParams();
+  const [token, setToken] = useState(null);
   const isEditMode = product_id !== "new";
   const [editError, setEditError] = useState(null);
 
   // Check admin authentication and fetch product data
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      setToken(token);
+      const role = localStorage.getItem("role");
 
     // Redirect non-admins or unauthenticated users
     if (!token || role !== "admin") {
       setEditError("You must be an admin to edit products.");
       router.push("/"); // Redirect to home
       return;
+      }
     }
 
     setLoadingEdit(true);

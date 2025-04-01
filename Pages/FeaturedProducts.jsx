@@ -160,10 +160,20 @@ import { Spinner } from "@/components/Spinner";
 
 const FeaturedCardSection = () => {
 
-  const {products, loading} = useContext(ProductContext);
+
+  const context = useContext(ProductContext);
+
+  if (!context) {
+    return <div className="">
+      <p className="text-2xl font-bold">No products found</p>
+    </div>
+  }
+  const {products, loading} = context;
+  
   if(loading){
     return <Spinner />
   } 
+  
   const featuredItems = products.slice(0, 5);
 
   if (featuredItems.length===0){
@@ -171,6 +181,8 @@ const FeaturedCardSection = () => {
   }
 
   console.log(featuredItems);
+
+
   return (
 
 
