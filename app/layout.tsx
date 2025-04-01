@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 
 import Navbar from '../components/Navbar'
 import Footer from '@/components/Footer'
-// import {CartProvider} from '@/components/CartContext
 import {Provider} from '@/store/Provider'
 
 
