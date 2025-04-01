@@ -10,7 +10,7 @@ const HomePage = () => {
     <>
       <div className="w-full min-h-screen flex flex-col items-center font-poppins relative bg-gray-900 pb-20 pt-20">
         {/* Cosmic Galaxy Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black lg:from-blue-900 lg:via-purple-800 lg:to-black z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-800 z-0"></div>
 
         <div className="w-full max-w-9xl lg:max-w-7xl flex flex-col lg:flex-row justify-between items-center relative z-10 px-4 sm:px-6 lg:px-10 pt-20 gap-8">
           {/* Left Section: Text and Social Icons */}
@@ -27,7 +27,7 @@ const HomePage = () => {
             <div>
               <Link
                 href="/services"
-                className="text-xs sm:text-sm px-4 py-2 w-max max-w-fit bg-purple-800 text-white font-semibold rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center"
+                className="text-xs sm:text-sm px-4 py-2 w-fit bg-purple-800 text-white font-semibold rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center"
               >
                 View Services
                 <ArrowRightIcon width={20} height={15} className="ml-2" />
@@ -76,7 +76,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <section className="w-full py-24  font-poppins text-center lg:mb-0 lg:mt-0 mb-10 mt-10">
+      <section className="w-full py-24  font-poppins text-center lg:mb-10 lg:mt-10 mb-10 mt-10">
         <div className="max-w-3xl mx-auto px-6">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-wide mb-4">
             Ready to Create?

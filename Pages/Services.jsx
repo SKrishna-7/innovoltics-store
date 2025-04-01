@@ -8,7 +8,7 @@ import df from "../assets/DF.png";
 export default function Services() {
   return (
     <div className="w-full min-h-screen bg-gray-900 text-gray-100 font-poppins">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="max-w-9xl lg:max-w-7xl mx-auto px-4 sm:px-4 lg:px-8 py-12 lg:py-16">
         <div className="flex flex-col lg:flex-row justify-between gap-8">
           {/* Left Section: Intro and Image */}
           <div className="w-full lg:w-2/5 p-6 lg:p-10 space-y-6">
