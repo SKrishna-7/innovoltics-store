@@ -44,7 +44,7 @@ export default function Services() {
               <h2 className="text-2xl sm:text-3xl font-semibold text-gray-100 mb-3">
                 Custom 3D Printing
               </h2>
-              <p className="text-xs pt-2 sm:text-sm text-gray-300 mb-4">
+              <p className="text-xs pt-4 sm:text-sm text-gray-300 mb-4">
                 We provide high-quality FDM 3D printing for prototypes, custom models, and functional parts. Choose from a variety of materials and colors to match your needs. Whether it's a one-off piece or batch production, we ensure precision and durability.
               </p>
               <Link
@@ -61,7 +61,7 @@ export default function Services() {
               <h2 className="text-2xl pt-2 sm:text-3xl font-semibold text-gray-100 mb-3">
                 Electronics Prototyping
               </h2>
-              <p className="text-xs pt-2 sm:text-sm text-gray-300 mb-4">
+              <p className="text-xs pt-4 sm:text-sm text-gray-300 mb-4">
                 From PCB design to embedded system development, we help bring your electronic ideas to life. Our services include circuit design, firmware programming, and component sourcing.
               </p>
               <Link
@@ -78,7 +78,7 @@ export default function Services() {
               <h2 className="text-2xl pt-2 sm:text-3xl font-semibold text-gray-100 mb-3">
                 3D Printing + Electronics
               </h2>
-              <p className="text-xs pt-2  sm:text-sm text-gray-300 mb-4">
+              <p className="text-xs pt-4 sm:text-sm text-gray-300 mb-4">
                 Combine 3D printing with electronics for smart devices, custom enclosures, and functional prototypes. We integrate sensors, microcontrollers, and power systems into 3D-printed cases. Ideal for IoT projects, robotics, and innovative hardware solutions.
               </p>
               <Link

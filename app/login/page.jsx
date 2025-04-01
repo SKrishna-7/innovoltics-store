@@ -45,7 +45,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState("Only for admin");
   const router = useRouter();
 
 
@@ -104,7 +104,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center">
+    <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center p-10">
       <div className="bg-white p-8 rounded-xl border-2 border-purple-100 w-full max-w-md">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Login</h1>
         {error && (
