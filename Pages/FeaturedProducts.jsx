@@ -28,9 +28,7 @@ const FeaturedCardSection = () => {
 
   if (featuredItems.length === 0) {
     return (
-      <div className="text-center py-10">
-        <p className="text-lg text-gray-600">No featured items available</p>
-      </div>
+      <></>
     );
   }
 

@@ -9,6 +9,12 @@ module.exports = {
     "./app/**/*.{js,jsx,ts,tsx}", // Add this if using App Router
     "./*.{js,jsx,ts,tsx}", // Include root-level files if needed
   ],
+  safelist: [
+    "bg-gradient-to-br",
+    "from-blue-900",
+    "via-purple-800",
+    "to-black",
+  ],
   theme: {
     extend: {
       fontFamily: {
