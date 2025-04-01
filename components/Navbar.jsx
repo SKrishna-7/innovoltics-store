@@ -29,7 +29,7 @@ export default function Navbar() {
 
 
   return (
-    <nav  className={`w-full py-4 px-6 md:px-16 font-poppins fixed top-0 left-0 z-50 transition-all duration-300  ${
+    <nav  className={`w-full py-4 px-6 md:px-16 font-poppins fixed top-0 left-0 z-50 transition-all duration-300 backdrop-blur-md ${
       isHomePage
         ? isScrolled
           ? "bg-gray-900/90 backdrop-blur-md shadow-lg text-gray-100"
@@ -89,8 +89,8 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col space-y-4 mt-8 text-center bg-zinc-950 ">
-          <Link href="/products" className="font-bold text-blue-900 hover:text-purple-800">Shop All</Link>
+        <div className="md:hidden flex flex-col space-y-4 mt-8 text-center   ">
+          <Link href="/products" className="font-bold text-white-900 hover:text-purple-800">Shop All</Link>
           {/* <Link href="/products" className="hover:text-purple-800 ">3D Products</Link> */}
           <Link href="/products" className="hover:text-purple-800">Our Products</Link>
           <Link href="/customize" className="hover:text-purple-800">Custom Orders</Link>
