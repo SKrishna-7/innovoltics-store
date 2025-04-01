@@ -67,7 +67,7 @@ const HomePage = () => {
             <div className="py-2 px-5 w-full flex justify-end">
               <Link
                 href="/customize"
-                className="text-xs sm:text-sm p-2 text-purple-300 flex items-center w-max hover:text-purple-400 transition-colors duration-200"
+                className="text-xs sm:text-sm p-2 text-white flex items-center w-max hover:text-purple-400 transition-colors duration-200"
               >
                 Get your custom model
                 <ArrowRightIcon width={20} height={15} className="ml-2" />
