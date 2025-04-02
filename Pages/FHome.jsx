@@ -8,12 +8,12 @@ import STLViewer from "@/components/HomeModel";
 const HomePage = () => {
   return (
     <>
-      <div className="w-full h-full min-h-screen  flex flex-col items-center font-poppins relative bg-white pb-20 pt-20">
+      <div className="w-full h-full min-h-screen  flex flex-col items-center justify-center font-poppins relative bg-white pb-20 pt-20">
         {/* Cosmic Galaxy Background Gradient */}
         <div className="absolute lg:block hidden inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100"></div>
         <div className="absolute lg:hidden block inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100  "></div>
 
-        <div className="w-full max-w-9xl lg:max-w-7xl flex flex-col lg:flex-row justify-between items-center relative z-10 px-4 sm:px-6 lg:px-10 pt-20 gap-8">
+        <div className="w-fulllg:max-w-[90%] flex flex-col lg:flex-row justify-between items-center relative z-10 px-4 sm:px-6 lg:px-10 pt-20 gap-8">
           {/* Left Section: Text and Social Icons */}
           <div className="w-full lg:w-3/5 p-5 space-y-6">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-wider font-kanit text-gray-100">
@@ -27,7 +27,7 @@ const HomePage = () => {
             </p>
             <div>
               <Link
-                href="/services"
+                href="/products"
                 className="text-xs sm:text-sm px-4 py-2 w-fit bg-purple-800 text-white font-semibold rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center"
               >
                 View Services
@@ -77,8 +77,9 @@ const HomePage = () => {
         </div>
       </div>
 
-      <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mb-20 mt-20">
-        <div className="max-w-3xl mx-auto px-6">
+      <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mt-20 mb-20 relative">
+
+        <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-wide mb-4">
             Ready to Create?
           </h2>
