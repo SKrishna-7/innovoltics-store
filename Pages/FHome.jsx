@@ -8,7 +8,7 @@ import STLViewer from "@/components/HomeModel";
 const HomePage = () => {
   return (
     <>
-      <div className="w-full min-h-screen flex flex-col items-center font-poppins relative bg-white pb-20 pt-20">
+      <div className="w-full h-full min-h-screen  flex flex-col items-center font-poppins relative bg-white pb-20 pt-20">
         {/* Cosmic Galaxy Background Gradient */}
         <div className="absolute lg:block hidden inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100"></div>
         <div className="absolute lg:hidden block inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100  "></div>

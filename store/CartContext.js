@@ -105,18 +105,18 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const clearCart = async () => {
-        try {
-            await axios.post(`${BASE_URL}/cart/clear`, {
-                user_id: userId || null,
-                guest_id: guestId || null
-            });
-            setCart([]);
-        } catch (error) {
-            console.error("Error clearing cart:", error);
-            setError(error?.response?.data?.detail || "Error clearing cart");
-        }
-    };
+    // const clearCart = async () => {
+    //     try {
+    //         await axios.post(`${BASE_URL}/cart/clear`, {
+    //             user_id: userId || null,
+    //             guest_id: guestId || null
+    //         });
+    //         setCart([]);
+    //     } catch (error) {
+    //         console.error("Error clearing cart:", error);
+    //         setError(error?.response?.data?.detail || "Error clearing cart");
+    //     }
+    // };
 
     const setUserIdAndMergeCart = async (newUserId) => {
         try {
@@ -136,6 +136,7 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+    const clearCart = () => setCart([]);
     return (
         <CartContext.Provider value={{ 
             cart, addToCart, removeFromCart, updateQuantity, clearCart, setUserIdAndMergeCart, loading, error, isLoggedIn

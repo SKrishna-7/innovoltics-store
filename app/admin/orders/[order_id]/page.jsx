@@ -24,7 +24,7 @@ export default function OrderDetails() {
  
 
   useEffect(() => {
-    // if (typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
     //   const token = localStorage.getItem("access_token");
     //   setToken(token);
     //   const role = localStorage.getItem("role");
@@ -32,11 +32,11 @@ export default function OrderDetails() {
     //     router.push("/"); // Redirect to home if not admin
     // } else {
     //   fetchOrderDetails(token);
-    // }}
     const token = localStorage.getItem("access_token");
     if (token) {
       fetchOrderDetails(token);
     }
+  }
   }, [order_id]);
 
   const fetchOrderDetails = async (token) => {
@@ -90,7 +90,7 @@ export default function OrderDetails() {
   };
 
   if (loading) {
-    return <div className="p-6 text-center text-gray-500 mt-20">Loading order details...</div>;
+    return <div className="p-6 text-center text-gray-500 mt-20 h-screen">Loading order details...</div>;
   }
 
   if (OrderError || !order) {
