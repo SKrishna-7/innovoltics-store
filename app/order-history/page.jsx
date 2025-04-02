@@ -5,14 +5,48 @@ import Link from 'next/link';
 import { OrderContext } from '@/store/OrderContext';
 
 const OrderHistoryPage = () => {
-    const { loading, orders, deleteOrderById , } = useContext(OrderContext);
+    const { loading ,deleteOrderById ,getOrderById } = useContext(OrderContext);
+    const [orders, setOrders] = useState([]);
   // console.log(getOrderById)
+  useEffect(() => {
+    
+    if (typeof window !== "undefined") {
+      const guestId = localStorage.getItem("guest_id");
+      const userId = localStorage.getItem("user_id");
+      if(!guestId && !userId){
+        return 'No guest id or user id found';
+      }
+
+    fetchOrderHistory(guestId,userId);
+
+  }
+  }, []);
+  
+  const fetchOrderHistory = async (guestId,userId) => {
+
+    const response = await getOrderById(userId,guestId);
+    console.log(response);
+    if(response){
+
+      setOrders(response);
+    }
+
+  }
   
   
-  
-  if(loading && orders.length === 0){
+  if(loading){
     return <div className="flex justify-center items-center h-screen">
       <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+    </div>
+  }
+  if(orders.length === 0){
+    return <div className="flex justify-center items-center h-screen">
+      <div className="text-center"> 
+        <p className="text-gray-600">No orders found</p>
+        <Link href="/customize" className="text-indigo-600 hover:underline font-medium">
+          Upload a model to get started!
+        </Link>
+      </div>
     </div>
   }
 

@@ -18,24 +18,22 @@ export const OrderProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);  
   const [token, setToken] = useState(null);
   // Initialize userId and guestId on mount
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("user_id");
-    let storedGuestId = getCookie("guest_id");
+  // useEffect(() => {
+  //   const storedUserId = localStorage.getItem("user_id");
+  //   let storedGuestId = getCookie("guest_id");
 
-    if (!storedGuestId) {
-      storedGuestId = Math.floor(100000 + Math.random() * 900000).toString();
-      setCookie("guest_id", storedGuestId, 30);
-    }
+  //   if (!storedGuestId) {
+  //     storedGuestId = Math.floor(100000 + Math.random() * 900000).toString();
+  //     setCookie("guest_id", storedGuestId, 30);
+  //   }
 
-    setUserId(storedUserId);
-    setGuestId(storedGuestId);
-  }, []); // Run once on mount
+  //   setUserId(storedUserId);
+  //   setGuestId(storedGuestId);
+  // }, []); // Run once on mount
 
   // Fetch orders when userId or guestId changes
   useEffect(() => {
-    if (userId || guestId) {
-      getOrderById(userId, guestId);
-    }
+    
     if (typeof window === "undefined") return;
 
     const token = localStorage.getItem("access_token");
@@ -95,7 +93,7 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
-  const getOrderById = async (userIdParam, guestIdParam, token) => {
+const getOrderById = async (userIdParam, guestIdParam) => {
     const uid = userIdParam || userId;
     const gid = guestIdParam || guestId;
     if (!uid && !gid) {
@@ -107,19 +105,17 @@ export const OrderProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-     
       const response = await axios.get(
         `${BASE_URL}/orders/history/get-by-user`, // Align with backend
         {
           params: { user_id: uid , guest_id: gid},
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       );
       setOrders(response.data || []);
       console.log("Fetched orders by ID:", response.data);
       return response.data;
     } catch (error) {
-      const errMsg = error?.response?.data?.detail || "Error fetching orders";
+      const errMsg = error && error?.response?.data?.detail || "Error fetching orders";
       setError(errMsg);
       console.error("Fetch orders by ID error:", error);
       setOrders([]);
