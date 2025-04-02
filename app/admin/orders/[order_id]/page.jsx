@@ -6,7 +6,9 @@ import axios from "axios";
 import { FaArrowLeft, FaShippingFast, FaTimes, FaTrash } from "react-icons/fa";
 import { OrderContext } from "@/store/OrderContext";
 import { useContext } from "react";
-const API_BASE_URL = "http://localhost:8000/api"; // No /api prefix
+// const API_BASE_URL = "http://localhost:8000/api"; // No /api prefix
+
+const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
 
 export default function OrderDetails() {
   const [order, setOrder] = useState(null);
@@ -22,16 +24,20 @@ export default function OrderDetails() {
  
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("access_token");
-      setToken(token);
-      const role = localStorage.getItem("role");
-      if (!token || role !== "admin") {
-        router.push("/"); // Redirect to home if not admin
-    } else {
+    // if (typeof window !== "undefined") {
+    //   const token = localStorage.getItem("access_token");
+    //   setToken(token);
+    //   const role = localStorage.getItem("role");
+    //   if (!token || role !== "admin") {
+    //     router.push("/"); // Redirect to home if not admin
+    // } else {
+    //   fetchOrderDetails(token);
+    // }}
+    const token = localStorage.getItem("access_token");
+    if (token) {
       fetchOrderDetails(token);
-    }}
-  }, [order_id, router]);
+    }
+  }, [order_id]);
 
   const fetchOrderDetails = async (token) => {
     setLoading(true);

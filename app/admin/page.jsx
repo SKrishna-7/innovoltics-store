@@ -7,20 +7,14 @@ import DashboardOverview from '../../components/DashboardOverview.jsx';
 import ProductManagement from '../../components/ProductManagement';
 import OrderManagement from '../../components/OrderManagement';
 import Messages from '../../components/Messages';
-import AdminSignupPage from '../signup/page';
+import AdminSignupPage from '../../components/Signup';
 import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
-
-    
-    console.log(token, role);
-  }, [router]);
+ 
   const renderContent = () => {
     switch (activeTab) {
       case 'overview': return <DashboardOverview />;

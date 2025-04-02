@@ -5,7 +5,8 @@ import axios from "axios";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
 import STLViewer from "@/components/HomeModel";
 
-const API_BASE_URL = "http://localhost:8000/api";
+const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
+// const API_BASE_URL = "http://localhost:8000/api";
 
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
@@ -26,7 +27,7 @@ export default function ProductDetails() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`${API_BASE_URL}/products/${product_id}`);
+      const response = await axios.get(`${BASE_URL}/products/${product_id}`);
       const data = response.data.product || response.data;
       setProduct(data);
     } catch (err) {
@@ -43,7 +44,7 @@ export default function ProductDetails() {
     setLoading(true);
     setError(null);
     try {
-      await axios.delete(`${API_BASE_URL}/products/${product_id}`);
+        await axios.delete(`${BASE_URL}/products/${product_id}`);
     //   router.push("/products");
     } catch (err) {
       setError("Failed to delete product.");

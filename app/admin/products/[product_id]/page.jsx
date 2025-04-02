@@ -5,7 +5,8 @@ import axios from "axios";
 import { ProductContext } from "@/store/ProductContext";
 import { FaArrowLeft, FaTimes } from "react-icons/fa";
 
-const API_BASE_URL = "http://localhost:8000/api";
+// const API_BASE_URL = "http://localhost:8000/api";
+const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
 
 const EditProductPage = () => {
   const { productById, error, fetchProductById, loading } = useContext(ProductContext);
@@ -218,15 +219,15 @@ const EditProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
+    // const token = localStorage.getItem("access_token");
+    // const role = localStorage.getItem("role");
 
-    // Double-check admin role before submission
-    if (!token || role !== "admin") {
-      setEditError("You must be an admin to edit products.");
-      router.push("/");
-      return;
-    }
+    // // Double-check admin role before submission
+    // if (!token || role !== "admin") {
+    //   setEditError("You must be an admin to edit products.");
+    //   router.push("/");
+    //   return;
+    // }
 
     try {
       const formData = new FormData();
@@ -260,6 +261,7 @@ const EditProductPage = () => {
         )
       );
       product.model_3d.forEach((file) => formData.append("model_3d", file));
+      formData.append("requirements",product.requirements || "");
       console.log(formData)
       console.log(product.model_3d)
       let response;
@@ -271,7 +273,7 @@ const EditProductPage = () => {
       if (isEditMode) {
         setLoadingEdit(true);
         response = await axios
-          .put(`${API_BASE_URL}/products/${product_id}`, formData, { headers })
+          .put(`${BASE_URL}/products/${product_id}`, formData, { headers })
           .catch((err) => {
             console.error("Update error:", err);
             const errorMsg =
@@ -284,7 +286,7 @@ const EditProductPage = () => {
       } else {
         setLoadingEdit(true);
         response = await axios
-          .post(`${API_BASE_URL}/products`, formData, { headers })
+          .post(`${BASE_URL}/products`, formData, { headers })
           .catch((err) => {
             console.error("Create error:", err);
             const errorMsg =

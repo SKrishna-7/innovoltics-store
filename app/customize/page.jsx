@@ -7,6 +7,9 @@ import { TrashIcon, CheckCircleIcon } from '@heroicons/react/20/solid';
 import { CartContext } from '@/store/CartContext';
 import axios from 'axios';
 
+
+const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
+
 const UploadModelPage = () => {
   const [file, setFile] = useState(null);
   const [modelUrl, setModelUrl] = useState('');
@@ -81,7 +84,7 @@ const UploadModelPage = () => {
   
     try{
       setLoading(true)
-      const response = await axios.post('http://localhost:8000/api/upload-model/', formData, {
+        const response = await axios.post(`${BASE_URL}/upload-model/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           // Add Authorization header if your API requires it

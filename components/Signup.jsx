@@ -6,68 +6,68 @@
 
 // const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
 
-// async function loginUser({email, password}) {
-
-//   try {
-//       const response = await fetch(`${BASE_URL}/login`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ email, password }),
-//     });
-//   const data = await response.json();
-//   if (!response.ok) 
-//   {
-//     return data.detail || "Login failed.";
-//   }
-//   return data;
-//   } catch (error) {
-//     return error.message || "Login failed.";
-//   }
-// } 
-
-// async function mergeGuest(guestId, token) {
-
-//   try {
-//     const response = await fetch(`${BASE_URL}/auth/mergeguest`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/x-www-form-urlencoded",
+// async function registerAdmin({ email, password, token }) {
+//   const response = await fetch(`${BASE_URL}/admin/register`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/x-www-form-urlencoded",
 //       "Authorization": `Bearer ${token}`,
 //     },
-//     body: new URLSearchParams({ guest_id: guestId }),
+//     body: new URLSearchParams({ email, password }),
 //   });
 //   const data = await response.json();
-//   if (!response.ok) throw new Error(data.detail || "Merge failed");
+//   if (!response.ok) throw new Error(data.detail || "Admin registration failed");
 //   return data;
-//   } catch (error) {
-//     return "Failed to merge guest data: " + error.message;
-//   }
-// } 
+// }
 
-// export default function AuthPage() {
+// async function verifyAdmin(token) {
+//   const response = await fetch(`${BASE_URL}/admin/verify`, {
+//     method: "GET",
+//     headers: {
+//       "Authorization": `Bearer ${token}`,
+//     },
+//   });
+//   const data = await response.json();
+//   if (!response.ok) throw new Error(data.detail || "Not an admin");
+//   return data;
+// }
+
+// export default function AdminSignupPage() {
 //   const [email, setEmail] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [loading, setLoading] = useState(false);
 //   const [showPassword, setShowPassword] = useState(false);
-//   const [error, setError] = useState(null);
-
+//   const [error, setError] = useState("");
+//   const [isAuthorized, setIsAuthorized] = useState(false);
+//   const [token, setToken] = useState(null);
 //   const router = useRouter();
 
-
+  
+//   // Verify admin status on page load
 //   useEffect(() => {
-//     if (!localStorage.getItem("guest_id") && !localStorage.getItem("user_id")) {
-//       console.log("No guest or user id found");
-//       }
 //     if (typeof window !== "undefined") {
 //       const token = localStorage.getItem("access_token");
-//       const role = localStorage.getItem("role");
-//       if (token && role === "admin") {
-//         return router.push("/admin");
+//       setToken(token);
+//       if (!token) {
+//         router.push("/login"); // Redirect to login if no token
+//             return;
 //       }
 //     }
-//   }, []);
 
-//   const handleLogin = async (e) => {
+//     const checkAdmin = async () => {
+//       try {
+//         await verifyAdmin(token);
+//         setIsAuthorized(true);
+//       } catch (err) {
+//         setError("You are not authorized to access this page.");
+//         router.push("/login"); // Redirect to login if not admin
+//       }
+//     };
+
+//     checkAdmin();
+//   }, [token, router]);
+
+//   const handleSignup = async (e) => {
 //     e.preventDefault();
 //     if (!email || !password) {
 //       setError("Please provide email and password.");
@@ -78,58 +78,39 @@
 //     setError("");
 
 //     try {
-//       const data = await loginUser({ email, password });
-//       // setError(data.detail || "Login failed.");
-//       setError(data);      
-//       localStorage.setItem("access_token", data.access_token);
-//       localStorage.setItem("user_id", data.user_id);
-//       localStorage.setItem("role", data.role);
-//       console.log(data);
-//       // Merge guest data if guest_id exists
-//       // const guestId = localStorage.getItem("guest_id");
-//       // if (guestId) {
-//       //   try {
-//       //     const mergeData = await mergeGuest(guestId, data.access_token);
-//       //     console.log("Merge successful:", mergeData);
-//       //     localStorage.removeItem("guest_id");
-//       //   } catch (mergeError) {
-//       //     setError("Failed to merge guest data: " + mergeError.message);
-//       //   }
-//       // }
-      
-//       // Redirect based on role
-//       // if (data.role === "admin") {
-//       //   router.push("/admin");
-//       // } else {
-//       //   router.push("/checkout");
-//       // }
-//       if (data.role === "admin") {
-//         router.push("/admin");
-//       }
-//       else {
-//        setError("Only for admin");
-//       }
+//       const data = await registerAdmin({ email, password, token });
+//       setError("Admin added successfully!");
+//       setEmail("");
+//       setPassword("");
 //     } catch (error) {
-//       setError(error.message || "Login failed.");
+//       setError(error.message || "Failed to add admin.");
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
+//   if (!isAuthorized) {
+//     return (
+//       <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center">
+//         <p className="text-red-700">Checking authorization...</p>
+//       </div>
+//     );
+//   }
+
 //   return (
-//     <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center p-10">
+//     <div className=" h-full bg-slate-50 font-poppins flex items-center justify-center">
 //       <div className="bg-white p-8 rounded-xl border-2 border-purple-100 w-full max-w-md">
-//         <h1 className="text-2xl font-bold text-gray-900 mb-6">Login</h1>
+//         <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Admin</h1>
 //         {error && (
 //           <div
 //             className={`mb-4 p-2 rounded-md text-center ${
-//               typeof error === "string" && JSON.stringify(error).includes("successfully") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+//               error.includes("successfully") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
 //             }`}
 //           >
-//             {error || "Only for admin"}
+//             {error}
 //           </div>
 //         )}
-//         <form className="space-y-4" onSubmit={handleLogin}>
+//         <form className="space-y-4" onSubmit={handleSignup}>
 //           <div>
 //             <label className="block text-sm font-medium text-gray-700">Email</label>
 //             <input
@@ -164,13 +145,24 @@
 //             className="w-full py-2 bg-purple-800 text-white rounded-md font-semibold hover:bg-purple-900 transition-colors disabled:opacity-50"
 //             disabled={loading}
 //           >
-//             {loading ? "Processing..." : "Login"}
+//             {loading ? "Processing..." : "Add Admin"}
 //           </button>
 //         </form>
+//         <button
+//           onClick={() => router.push("/admin")}
+//           className="mt-4 text-sm text-purple-600 hover:underline"
+//         >
+//           Back to Admin Dashboard
+//         </button>
 //       </div>
 //     </div>
 //   );
 // }
+
+
+
+
+
 
 
 
@@ -183,36 +175,68 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 const BASE_URL = "https://innovoltics-3dprinters.onrender.com/api";
 
-async function loginUser({ email, password }) {
-  const response = await fetch(`${BASE_URL}/login`, {
+async function registerAdmin({ email, password, token }) {
+  const response = await fetch(`${BASE_URL}/admin/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: new URLSearchParams({ email, password }),
   });
   const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.detail || "Login failed");
-  }
+  if (!response.ok) throw new Error(data.detail || "Admin registration failed");
   return data;
 }
 
-export default function AuthPage() {
+async function verifyAdmin(token) {
+  const response = await fetch(`${BASE_URL}/admin/verify`, {
+    method: "GET",
+    headers: { "Authorization": `Bearer ${token}` },
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.detail || "Not an admin");
+  return data;
+}
+
+export default function AdminSignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // Separate success state
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const router = useRouter();
 
+  // Verify admin status on mount
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("role");
-    if (token && role === "admin") {
-      router.push("/admin");
-    }
-  }, [router]);
+    const checkAdmin = async () => {
+      if (typeof window === "undefined") return;
 
-  const handleLogin = async (e) => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        console.log("No token found, redirecting to login");
+        router.push("/login");
+        return;
+      }
+
+      try {
+        await verifyAdmin(token);
+        setIsAuthorized(true);
+      } catch (err) {
+        console.log("Verification failed:", err.message);
+        router.push("/login");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAdmin();
+  }, [router]); // Only depend on router, token check is inside
+
+  const handleSignup = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please provide email and password.");
@@ -220,20 +244,15 @@ export default function AuthPage() {
     }
 
     setLoading(true);
-    setError(null);
+    setError("");
+    setSuccess("");
 
     try {
-      const data = await loginUser({ email, password });
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("user_id", data.user_id);
-      localStorage.setItem("role", data.role);
-      console.log("Login successful:", data);
-
-      if (data.role === "admin") {
-        router.push("/admin");
-      } else {
-        setError("Only admins can log in here.");
-      }
+      const token = localStorage.getItem("access_token");
+      const data = await registerAdmin({ email, password, token });
+      setSuccess("Admin added successfully!");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -241,16 +260,33 @@ export default function AuthPage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center">
+        <p className="text-gray-700">Checking authorization...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return null; // Redirect handled in useEffect
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center p-10">
+    <div className="min-h-screen bg-slate-50 font-poppins flex items-center justify-center">
       <div className="bg-white p-8 rounded-xl border-2 border-purple-100 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Login</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Admin</h1>
         {error && (
           <div className="mb-4 p-2 rounded-md text-center bg-red-100 text-red-700">
             {error}
           </div>
         )}
-        <form className="space-y-4" onSubmit={handleLogin}>
+        {success && (
+          <div className="mb-4 p-2 rounded-md text-center bg-green-100 text-green-700">
+            {success}
+          </div>
+        )}
+        <form className="space-y-4" onSubmit={handleSignup}>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -285,9 +321,15 @@ export default function AuthPage() {
             className="w-full py-2 bg-purple-800 text-white rounded-md font-semibold hover:bg-purple-900 transition-colors disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? "Processing..." : "Login"}
+            {loading ? "Processing..." : "Add Admin"}
           </button>
         </form>
+        <button
+          onClick={() => router.push("/admin")}
+          className="mt-4 text-sm text-purple-600 hover:underline"
+        >
+          Back to Admin Dashboard
+        </button>
       </div>
     </div>
   );

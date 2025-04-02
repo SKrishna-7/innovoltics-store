@@ -4,6 +4,7 @@ import { getCookie, setCookie } from "@/utils/cookieUtils";
 
 // Create Cart Context
 export const CartContext = createContext();
+const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
@@ -34,7 +35,7 @@ export const CartProvider = ({ children }) => {
 
                 // Fetch cart from API
 
-                const response = await axios.get(`http://localhost:8000/api/cart`, {
+                const response = await axios.get(`${BASE_URL}/cart`, {
                     params: { user_id: storedUserId, guest_id: storedGuestId }
                 });
 
@@ -58,7 +59,7 @@ export const CartProvider = ({ children }) => {
         setLoading(true);
         try {
             console.log(guestId)
-            const response = await axios.post(`http://localhost:8000/api/cart/add`, 
+            const response = await axios.post(`${BASE_URL}/cart/add`, 
                 { item }, // Fixed issue: Send item inside an object
                 { params: { user_id: userId, guest_id: guestId } }
             );
@@ -90,7 +91,7 @@ export const CartProvider = ({ children }) => {
     const removeFromCart = async (cartItemId) => {
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:8000/api/cart/remove/${cartItemId}`, {
+            await axios.delete(`${BASE_URL}/cart/remove/${cartItemId}`, {
                 params: { user_id: userId, guest_id: guestId }
             });
 
@@ -106,7 +107,7 @@ export const CartProvider = ({ children }) => {
 
     const clearCart = async () => {
         try {
-            await axios.post(`http://localhost:8000/api/cart/clear`, {
+            await axios.post(`${BASE_URL}/cart/clear`, {
                 user_id: userId || null,
                 guest_id: guestId || null
             });
@@ -119,7 +120,7 @@ export const CartProvider = ({ children }) => {
 
     const setUserIdAndMergeCart = async (newUserId) => {
         try {
-            const response = await axios.post(`http://localhost:8000/api/cart/merge`, {
+                const response = await axios.post(`${BASE_URL}/cart/merge`, {
                 guest_id: guestId,
                 user_id: newUserId
             });

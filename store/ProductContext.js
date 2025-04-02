@@ -5,6 +5,8 @@ import axios from 'axios';
 // Create Product Context
 export const ProductContext = createContext();
 
+const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
+console.log(BASE_URL);
 // Product Provider
 export const ProductProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
@@ -17,9 +19,9 @@ export const ProductProvider = ({ children }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/products');
+                const response = await axios.get(`${BASE_URL}/products`);
                 setProducts(response.data); 
-                console.log(response.data);
+                console.log("products", response.data);
 
             } catch (error) {
                 setError(error?.response?.data?.detail || "Error fetching products");
@@ -37,7 +39,7 @@ export const ProductProvider = ({ children }) => {
         setProductLoading(true);
         try {
             console.log(id);
-            const response = await axios.get(`http://localhost:8000/api/products/${id}`);
+            const response = await axios.get(`${BASE_URL}/products/${id}`);
             console.log("API Response:", response.data); // Debugging line
             setProductById(response.data);
             return response.data;
@@ -51,7 +53,7 @@ export const ProductProvider = ({ children }) => {
     const deleteProduct = async (id) => {
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:8000/api/products/${id}`);
+            await axios.delete(`${BASE_URL}/products/${id}`);
             fetchProducts();
         } catch (error) {
             console.error('Error deleting product:', error);
