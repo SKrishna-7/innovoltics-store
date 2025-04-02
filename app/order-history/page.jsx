@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { OrderContext } from '@/store/OrderContext';
 
 const OrderHistoryPage = () => {
-    const { loading, orders, deleteOrderById } = useContext(OrderContext);
+    const { loading, orders, deleteOrderById , } = useContext(OrderContext);
   // console.log(getOrderById)
   
   

@@ -111,7 +111,7 @@ export const OrderProvider = ({ children }) => {
       const response = await axios.get(
         `${BASE_URL}/orders/history/get-by-user`, // Align with backend
         {
-          params: { user_id: uid , guestId: gid},
+          params: { user_id: uid , guest_id: gid},
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       );
