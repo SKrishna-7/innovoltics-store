@@ -7,11 +7,11 @@ import df from "../assets/DF.png";
 
 export default function Services() {
   return (
-    <div className="w-full min-h-screen bg-gray-900 text-gray-100 font-poppins pt-10 mt-10">
+    <div className="w-full min-h-screen bg-gray-900 text-gray-100 font-poppins pt-10 mt-20">
       <div className="w-full max-w-max  px-1 sm:px-4 lg:px-8 py-12 lg:py-16">
         <div className="flex flex-col w-full lg:flex-row justify-between text-left gap-8">
           {/* Left Section: Intro and Image */}
-          <div className="w-full lg:w-3/5 p-6 lg:p-10 space-y-6">
+          <div className="w-full lg:w-3/5 py-6 pxlg:p-10 space-y-6">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-100">
               What We Offer?
             </h1>
