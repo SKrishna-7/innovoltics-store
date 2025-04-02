@@ -732,7 +732,7 @@ export default function ProductDetails() {
         </div>
 
         {/* Description and Details */}
-        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="space-y-6">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">Description</h2>
             <p className="text-base text-gray-700">{productById?.description}</p>
