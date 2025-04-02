@@ -13,7 +13,7 @@ const HomePage = () => {
         <div className="absolute lg:block hidden inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100"></div>
         <div className="absolute lg:hidden block inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100  "></div>
 
-        <div className="w-full lg:max-w-[80%] flex flex-col lg:flex-row justify-between  relative z-10 px-4 sm:px-2 lg:px-10 pt-20 lg:gap-8">
+        <div className="w-full lg:max-w-[80%] flex flex-col lg:flex-row justify-between  relative z-10 px-4 sm:px-2 lg:px-20 pt-20 lg:gap-8">
 
 
                     {/* Left Section: Text and Social Icons */}

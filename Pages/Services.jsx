@@ -11,7 +11,7 @@ export default function Services() {
       <div className="w-full max-w-max  px-1 sm:px-4 lg:px-8 py-12 lg:py-16">
         <div className="flex flex-col w-full lg:flex-row justify-between text-left gap-8">
           {/* Left Section: Intro and Image */}
-          <div className="w-full lg:w-3/5 py-6 pxlg:p-10 space-y-6">
+          <div className="w-full lg:w-3/5 py-6 px-5 lg:p-10 space-y-6">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-100">
               What We Offer?
             </h1>
@@ -20,7 +20,7 @@ export default function Services() {
             </p>
             <Link
               href="/products"
-              className="text-sm px-4 py-1 w-fit  bg-purple-800 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center "
+              className="text-sm px-4 py-3 w-fit  bg-purple-800 text-white rounded-md hover:bg-purple-700 transition-colors duration-200 flex items-center "
             >
               View All Collections
               <ArrowRightIcon width={20} height={15} className="ml-2" />
