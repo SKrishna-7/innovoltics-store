@@ -80,42 +80,38 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mt-20 mb-20 relative">
+      <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mt-20 mb-20 relative">
 
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-wide mb-4">
             Ready to Create?
           </h2>
           <p className="text-sm sm:text-base text-gray-700 max-w-md mx-auto mb-8">
-            Upload your 3D model or contact us for custom electronics today.
+          Explore custom 3D printing and electronic prototyping tailored for your ideas. Whether it’s product design, prototyping, or a unique build—our team makes it real.
           </p>
           <Link href="/customize">
-            <button className="px-8 py-3 bg-purple-700 text-white font-normal text-sm lg:text-base  rounded-md hover:bg-purple-800 transition-all duration-300 hover:shadow-lg">
-              Upload Your Model
-            </button>
+          <button className="border border-purple-400 text-purple-800 px-5 py-2 text-sm rounded hover:bg-purple-700 hover:text-white transition">Tell Us Your Idea</button>
+
           </Link>
         </div>
-      </section> */}
-
+      </section>
+{/* 
 <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-20 bg-white font-poppins">
-  {/* Left Side: Heading */}
   <div className="flex-1">
     <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 font-kanit">
       Innovate with 3D Printing & Electronics
     </h1>
   </div>
 
-  {/* Right Side: Paragraph and Buttons */}
   <div className="flex-1 mt-8 md:mt-0 md:pl-10">
     <p className="text-sm md:text-base text-gray-700 mb-6 max-w-md ">
       Explore custom 3D printing and electronic prototyping tailored for your ideas. Whether it’s product design, prototyping, or a unique build—our team makes it real.
     </p>
     <div className="flex gap-4">
-      {/* <button className="bg-purple-700 text-white px-5 py-2 text-sm rounded hover:bg-purple-800 transition">Learn More</button> */}
       <button className="border border-purple-400 text-purple-800 px-5 py-2 text-sm rounded hover:bg-purple-700 hover:text-white transition">Tell Us Your Idea</button>
     </div>
   </div>
-</section>
+</section> */}
 
     </>
   );
