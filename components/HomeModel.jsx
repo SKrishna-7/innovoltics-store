@@ -25,12 +25,12 @@ function WebGLContextHandler({ setError }) {
 
   useEffect(() => {
     const handleContextLoss = (event) => {
-      console.warn("WebGL context lost:", event);
+      // console.warn("WebGL context lost:", event);
       setError("WebGL context lost. Please refresh the page.");
     };
 
     const handleContextRestored = () => {
-      console.log("WebGL context restored");
+      // console.log("WebGL context restored");
       setError(null);
     };
 
@@ -59,18 +59,18 @@ function Model({ color, modelUrl, modelType }) {
 
   // Use the provided modelUrl directly, unless it's explicitly not provided
   const effectiveModelUrl = modelUrl || defaultModel;
-  console.log("Path:", path);
-  console.log("Provided modelUrl:", modelUrl);
-  console.log("Effective model URL:", effectiveModelUrl);
+  // console.log("Path:", path);
+  // console.log("Provided modelUrl:", modelUrl);
+  // console.log("Effective model URL:", effectiveModelUrl);
 
   // Get the file extension, or use the provided modelType
   let extension = getFileExtension(effectiveModelUrl);
   if (!extension) {
     // If no extension is found, use the provided modelType or default to "obj"
     extension = modelType || "obj";
-    console.warn(
-      `No file extension found in URL: ${effectiveModelUrl}. Assuming type: ${extension}`
-    );
+    // console.warn(
+    //   `No file extension found in URL: ${effectiveModelUrl}. Assuming type: ${extension}`
+    // );
   }
 
   // Load the model based on its extension
@@ -100,7 +100,7 @@ function Model({ color, modelUrl, modelType }) {
         break;
 
       default:
-        console.log(`Unsupported file extension: ${extension}`);
+        // console.log(`Unsupported file extension: ${extension}`);
         throw new Error(`Unsupported file extension: ${extension}`);
     }
 
@@ -125,7 +125,7 @@ function Model({ color, modelUrl, modelType }) {
         throw new Error("Unknown model type after loading");
     }
   } catch (error) {
-    console.log("Model loading error:", error);
+    // console.log("Model loading error:", error);
     throw error; // Re-throw to trigger Suspense fallback
   }
 }
@@ -141,7 +141,7 @@ function FallbackModel({ color }) {
       </mesh>
     );
   } catch (error) {
-    console.log("Failed to load fallback model:", error);
+    // console.log("Failed to load fallback model:", error);
     return (
       <mesh>
         <boxGeometry args={[1, 1, 1]} />
@@ -176,7 +176,7 @@ export default function STLViewer({ colors, model, modelType }) {
           <ErrorBoundary
             onError={(err) => {
               setError("Failed to load the 3D model. Please try again later.");
-              console.log("ErrorBoundary caught an error:", err);
+              // console.log("ErrorBoundary caught an error:", err);
             }}
             fallback={<FallbackModel color={colors} />}
           >

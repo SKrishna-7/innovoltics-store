@@ -2,59 +2,37 @@
 
 import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
-import { OrderContext } from '@/store/OrderContext';
+import { useUser } from "@/store/UserContext";
+import { useOrderHistory , useCancelOrder} from '@/hooks/orderHooks.js';
 
 const OrderHistoryPage = () => {
-    const { loading ,deleteOrderById ,getOrderById } = useContext(OrderContext);
-    const [orders, setOrders] = useState([]);
-  // console.log(getOrderById)
-  useEffect(() => {
-    
-    if (typeof window !== "undefined") {
-      const guestId = localStorage.getItem("guest_id");
-      const userId = localStorage.getItem("user_id");
-      if(!guestId && !userId){
-        return 'No guest id or user id found';
-      }
-
-    fetchOrderHistory(guestId,userId);
-
-  }
-  }, []);
+   
   
-  const fetchOrderHistory = async (guestId,userId) => {
+  const { token, user } = useUser();
+  const { data, isLoading, error } = useOrderHistory(token);
+  const { mutate: cancelOrder, isLoading: cancelling } = useCancelOrder(token);
 
-    const response = await getOrderById(userId,guestId);
-    console.log(response);
-    if(response){
-
-      setOrders(response);
-    }
-
-  }
-  
-  
-  if(loading){
+  const orders=data?.orders || '';
+  if(isLoading){
     return <div className="flex justify-center items-center h-screen">
       <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
     </div>
   }
-  if(orders.length === 0){
-    return <div className="flex justify-center items-center h-screen">
-      <div className="text-center"> 
-        <p className="text-gray-600">No orders found</p>
-        <Link href="/customize" className="text-indigo-600 hover:underline font-medium">
-          Upload a model to get started!
-        </Link>
-      </div>
-    </div>
-  }
+  // if(orders?.length === 0){
+  //   return <div className="flex justify-center items-center h-screen">
+  //     <div className="text-center"> 
+  //       <p className="text-gray-600">No orders found</p>
+  //       <Link href="/customize" className="text-indigo-600 hover:underline font-medium">
+  //         Upload a model to get started!
+  //       </Link>
+  //     </div>
+  //   </div>
+  // }
 
-
-
-  console.log(orders)
+  // console.log(orders)
   return (
     <div className="bg-gray-50 min-h-screen font-poppins pt-20">
+      
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <header className="mb-10 text-center">
@@ -67,9 +45,9 @@ const OrderHistoryPage = () => {
        
         {/* Orders Section */}
         <div className="bg-white rounded-xl shadow-sm p-6">
-          {loading ? (
+          {isLoading ? (
             <p className="text-center text-gray-600">Loading your orders...</p>
-          ) : orders.length === 0 ? (
+          ) : Array(orders) && orders.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600">
                 No orders found.{' '}
@@ -89,9 +67,12 @@ const OrderHistoryPage = () => {
                   {/* Order Header */}
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                     <div>
+                      <div className="block items-center justify-center sm:flex">
                       <h2 className="text-xl font-semibold text-gray-900">
-                        Order ID #{order.order_id}
+                        Order ID 
                       </h2>
+                      <p className='text-lg  sm:pl-2'> #{order._id}</p>
+                      </div>
                       <p className="text-sm text-gray-500">
                         Placed on{" "}
                         {order.created_at
@@ -175,7 +156,17 @@ const OrderHistoryPage = () => {
                       </dl>
                     </div>
                   </div>
-          
+
+                  {order.status !== "Cancelled" && order.status !== "Delivered" && order.status !== 'Shipped' && (
+                    <button
+                      onClick={() => cancelOrder({ orderId: order._id })}
+                      disabled={cancelling}
+                      className="mt-5 px-4 py-2 bg-red-700 text-white rounded hover:bg-red-700 "
+                    >
+                      {cancelling ? "Cancelling..." : "Cancel Order"}
+                    </button>
+                  )}
+                    
                   {/* Action Buttons (Optional) */}
                   {/* <div className="mt-6 flex justify-end space-x-4">
                     <button className=" px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700
@@ -205,6 +196,7 @@ const OrderHistoryPage = () => {
           )}
         </div>
       </div>
+
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { ShoppingCartIcon, UserIcon, Bars3Icon, XMarkIcon } from "@heroicons/rea
 import logo from "@/assets/images/logo.png";
 import { usePathname } from "next/navigation";
 import CartIconWithBadge from "@/components/CartBadge";
+import { useUser } from "@/store/UserContext";
 
 export default function Navbar() {                                    
   const [menuOpen, setMenuOpen] = useState(false);               
@@ -15,6 +16,7 @@ export default function Navbar() {
   // Determine if we're on the homepage
   const isHomePage = pathname === "/";
 
+  const {token}=useUser();
   // Handle scroll effect (only for homepage)
   useEffect(() => {
     const handleScroll = () => {
@@ -72,7 +74,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex-1 flex justify-end items-center space-x-4">
-         <Link href='/login'>
+         <Link href={`${token ? '/profile' : '/login'}`}>
           <UserIcon className={`w-6 h-6 cursor-pointer  ${isHomePage ? 'text-gray-100' : 'text-zinc-950'}  hover:text-black `} />
          </Link>
          {/* <Link href='/checkout'>

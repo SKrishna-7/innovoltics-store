@@ -7,7 +7,7 @@ export async function isValidSTLModel(modelUrl) {
 
         // Check if the response is OK
         if (!response.ok) {
-            console.log("Failed to fetch STL file:", response.statusText);
+            // console.log("Failed to fetch STL file:", response.statusText);
             return false;
         }   
 
@@ -17,11 +17,11 @@ export async function isValidSTLModel(modelUrl) {
         // Check if the file is empty or too large (set a limit, e.g., 50MB)
         const fileSize = arrayBuffer.byteLength;
         if (fileSize === 0) {
-            console.log("STL file is empty.");
+            // console.log("STL file is empty.");
             return false;
         }
         if (fileSize > 50 * 1024 * 1024) { // 50MB limit
-            console.log("STL file is too large.");
+            // console.log("STL file is too large.");
             return false;
         }
 
@@ -32,7 +32,7 @@ export async function isValidSTLModel(modelUrl) {
         // If parsed successfully, it's a valid STL model
         return !!geometry;
     } catch (error) {
-        console.log("Error validating STL model:", error);
+        // console.log("Error validating STL model:", error);
         return false;
     }
 }

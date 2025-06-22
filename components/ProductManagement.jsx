@@ -3,38 +3,23 @@
 
 "use client";
 import { useState, useEffect } from "react";
-import { FaSync, FaCog, FaPlus, FaTimes } from "react-icons/fa";
+import { FaSync, FaCog, FaPlus, FaTimes, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
+import { useDeleteProduct, useProducts } from "@/hooks/productHooks";
+import { useUser } from "@/store/UserContext";
+
 
 export default function ProductManagement() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+ 
   const [error, setError] = useState(null);
   const router = useRouter();
   
-
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-        const response = await axios.get(`${BASE_URL}/products`);
-      setProducts(response.data.products || response.data);
-    } catch (err) {
-      setError(err?.response?.data?.detail || "Failed to fetch products");
-      console.error("Fetch products error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: products = [] , isLoading:loading} = useProducts();
+  const {user,token}= useUser()
+  const { mutate: deleteProduct, isLoading: deleting } = useDeleteProduct(token);
 
   const viewProductDetails = (productId) => {
     router.push(`/admin/products/${productId}`);
@@ -51,7 +36,7 @@ export default function ProductManagement() {
             <span className="text-purple-600">({products.length})</span>
           </h2>
           <button
-            onClick={fetchProducts}
+        
             className="p-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition duration-200 disabled:opacity-50"
             disabled={loading}
             title="Refresh Products"
@@ -76,6 +61,12 @@ export default function ProductManagement() {
 
   }
 
+  const handleDelete = (product_id) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deleteProduct({ product_id });
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       
@@ -88,7 +79,6 @@ export default function ProductManagement() {
             <span className="text-purple-600">({products.length})</span>
           </h2>
           <button
-            onClick={fetchProducts}
             className="p-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition duration-200 disabled:opacity-50"
             disabled={loading}
             title="Refresh Products"
@@ -145,7 +135,13 @@ export default function ProductManagement() {
                           onClick={() => viewProductDetails(product._id)}
                           className="text-purple-600 hover:text-purple-800 flex items-center gap-1 transition duration-150"
                         >
-                          <FaCog /> Actions
+                          <FaCog /> Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(product._id)}
+                          className="text-red-600 hover:text-red-400 flex items-center gap-1 mt-1 transition duration-150"
+                        >
+                          <FaTrash /> Delete
                         </button>
                       </td>
                     </tr>

@@ -2,98 +2,92 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import axios from "axios";
 import { FaArrowLeft, FaShippingFast, FaTimes, FaTrash } from "react-icons/fa";
-import { OrderContext } from "@/store/OrderContext";
-import { useContext } from "react";
-// const API_BASE_URL = "http://localhost:8000/api"; // No /api prefix
-
-const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
+import {
+  useOrderById,
+  useUpdateOrderStatus,
+  useDeleteOrder,
+} from "@/hooks/Orderhooks"; 
 
 export default function OrderDetails() {
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [OrderError, setOrderError] = useState(null);
-  const [token, setToken] = useState(null);
+  const [confirmAction, setConfirmAction] = useState(null); // 'cancel' | 'delete' | null
+
+  
   const router = useRouter();
-  const { order_id } = useParams();
+  const { id } = useParams();
+  const order_id= id || null
 
-  const { deleteOrderById ,getOrderByOrderId ,OrderUpdateStatus ,error} = useContext(OrderContext);
+  // console.log(id)
+  const { data: order, isLoading: loading, error } = useOrderById(order_id);
+
+  const updateOrderMutation = useUpdateOrderStatus();
+  const deleteOrderMutation = useDeleteOrder();
+
+
+  // console.log(String(order?.status).toLowerCase())
+
   // Check admin authentication on mount
-
- 
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-    //   const token = localStorage.getItem("access_token");
-    //   setToken(token);
-    //   const role = localStorage.getItem("role");
-    //   if (!token || role !== "admin") {
-    //     router.push("/"); // Redirect to home if not admin
-    // } else {
-    //   fetchOrderDetails(token);
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      fetchOrderDetails(token);
+  const updateStatus = async (action) => {
+    if (!order) return console.error("No order data available.");
+  
+    let order_id=order?._id
+    // console.log("Action:",action, "Order ID:", order_id);
+    
+    let nextStatus = "";
+  
+    if (action === "next") {
+      switch (String(order?.status).toLowerCase()) {
+        case "pending":
+          nextStatus = "Processing";
+          break;
+        case "processing":
+          nextStatus = "Shipped";
+          break;
+        case "shipped":
+          nextStatus = "Delivered";
+          break;
+        default:
+          // console.warn("Order already in final state:", order.status);
+          return;
+      }
+    } else if (action === "cancel") {
+      if (["Delivered", "Canceled"].includes(order.status)) {
+        // console.warn("Cannot cancel an order that is already", order.status);
+        return;
+      }
+      nextStatus = "Canceled";
     }
+  
+    if (!nextStatus) return;
+  
+    try {
+      await updateOrderMutation.mutateAsync({ order_id, status: nextStatus });
+      // console.log("Status updated to:", nextStatus);
+    } catch (err) {
+      // console.error("Status update failed:", err);
+    }
+  };
+  
+
+const deleteOrder = async (order_id) => {
+  try {
+    await deleteOrderMutation.mutateAsync(order_id);
+    // router.push("/admin");
+    alert('Order Deleted Successfully...')
+  } catch (err) {
+    alert('Failed to delete order...')
+
+    // console.error("Order deletion failed", err);
   }
-  }, [order_id]);
+};
 
-  const fetchOrderDetails = async (token) => {
-    setLoading(true);
-    setOrderError(null);
-    try {
-     const response = await getOrderByOrderId(order_id, token);
-      setOrder(response || null);
-    } catch (err) {
-      setOrderError(err || "Failed to fetch order details");
-      console.error("Fetch order details error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateStatus   = async (action) => {
-    const confirmMessage =
-      action === "next" ? "Advance this order to the next status?" : "Cancel this order?";
-    if (!confirm(confirmMessage)) return;
-
-    setLoading(true);
-    setOrderError(null);
-    try {
-      const token = localStorage.getItem("access_token");
-      await OrderUpdateStatus(order_id, action, token);
-      fetchOrderDetails(token); // Refresh order details
-    } catch (err) {
-      setOrderError(err || `Failed to ${action} order`);
-      console.error(`Update status error (${action}):`, err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteOrder = async () => {
-    if (!confirm("Are you sure you want to delete this order?")) return;
-
-    setLoading(true);
-    setOrderError(null);
-    try {
-      const token = localStorage.getItem("access_token");
-      await deleteOrderById(order_id, token);
-      return router.push("/admin");
-    } catch (err) {
-      setOrderError(err?.response?.data?.detail || "Failed to delete order");
-      console.error("Delete order error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return <div className="p-6 text-center text-gray-500 mt-20 h-screen">Loading order details...</div>;
   }
 
-  if (OrderError || !order) {
+  if (error || !order) {
     return (
       <div className="p-6 text-center text-red-600 mt-20">
         {OrderError || "Order not found."}
@@ -107,7 +101,7 @@ export default function OrderDetails() {
     );
   }
   order.cart_items.map((item,index)=>{
-    console.log(item)
+    // console.log(item)
   })
   return (
     <div className="p-6 bg-gray-100 min-h-screen mt-20">
@@ -119,11 +113,11 @@ export default function OrderDetails() {
           <FaArrowLeft /> Back to Orders
         </button>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800">Order Details - {order.order_id}</h2>
+          <h2 className="text-3xl font-bold text-gray-800">Order Details</h2>
           <div className="flex gap-4">
             {order.status !== "Delivered" && order.status !== "Canceled" && (
               <button
-                onClick={() => updateStatus("next")}
+                onClick={() => setConfirmAction("next")}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-200 disabled:opacity-50"
                 disabled={loading}
               >
@@ -132,7 +126,7 @@ export default function OrderDetails() {
             )}
             {order.status !== "Canceled" && (
               <button
-                onClick={() => updateStatus("cancel")}
+                onClick={() => setConfirmAction("cancel")  }
                 className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200 disabled:opacity-50"
                 disabled={loading}
               >
@@ -140,7 +134,7 @@ export default function OrderDetails() {
               </button>
             )}
             <button
-              onClick={deleteOrder}
+              onClick={()=>setConfirmAction("delete")}
               className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-200 disabled:opacity-50"
               disabled={loading}
             >
@@ -160,7 +154,7 @@ export default function OrderDetails() {
           <section>
             <h3 className="text-xl font-semibold text-purple-700 mb-4">Order Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p><strong>ID:</strong> {order.order_id}</p>
+              <p><strong>ID:</strong> {order._id}</p>
               <p>
                 <strong>Status:</strong>{" "}
                 <span
@@ -177,10 +171,9 @@ export default function OrderDetails() {
               </p>
               <p>
                 <strong>Total:</strong> ₹
-                {order.cart_items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}
+              {order.total_price}
               </p>
-              <p><strong>User ID:</strong> {order.user_id || "N/A"}</p>
-              <p><strong>Guest ID:</strong> {order.guest_id || "N/A"}</p>
+              <p><strong>User Email:</strong> {order.email || "N/A"}</p>
             </div>
           </section>
 
@@ -238,6 +231,47 @@ export default function OrderDetails() {
           </section>
         </div>
       </div>
+      {confirmAction && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-sm text-center">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        Confirm {confirmAction === "next"
+          ? "Status Update"
+          : confirmAction === "cancel"
+          ? "Cancellation"
+          : "Deletion"}
+      </h3>
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to{" "}
+        {confirmAction === "next"
+          ? "move to the next status?"
+          : confirmAction === "cancel"
+          ? "cancel this order?"
+          : "permanently delete this order?"}
+      </p>
+      <div className="flex justify-center gap-4">
+        <button
+          onClick={() => {
+            if (confirmAction === "next") updateStatus("next", order._id);
+            else if (confirmAction === "cancel") updateStatus("cancel", order._id);
+            else if (confirmAction === "delete") deleteOrder();
+            setConfirmAction(null);
+          }}
+          className="px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+        >
+          Confirm
+        </button>
+        <button
+          onClick={() => setConfirmAction(null)}
+          className="px-5 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

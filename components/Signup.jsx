@@ -217,7 +217,7 @@ export default function AdminSignupPage() {
 
       const token = localStorage.getItem("access_token");
       if (!token) {
-        console.log("No token found, redirecting to login");
+        // console.log("No token found, redirecting to login");
         router.push("/login");
         return;
       }
@@ -226,7 +226,7 @@ export default function AdminSignupPage() {
         await verifyAdmin(token);
         setIsAuthorized(true);
       } catch (err) {
-        console.log("Verification failed:", err.message);
+        // console.log("Verification failed:", err.message);
         router.push("/login");
       } finally {
         setIsLoading(false);

@@ -3,19 +3,22 @@
 
 
 import { useState, useContext } from "react";
-import { ProductContext } from "@/store/ProductContext";
 import Link from "next/link";
 import Image from "next/image";
 import { FunnelIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { isValidUrl } from "@/utils/ValidURL";
 import { Spinner } from "@/components/Spinner";
+import { useProducts } from "@/hooks/productHooks";
 export default function ProductsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({});
   const [sortOption, setSortOption] = useState("default");
 
-  const { products, loading } = useContext(ProductContext);
 
+  const { data: products = [] , isLoading:loading} = useProducts();
+
+
+  // console.log(products)
   if (loading) {
     return <Spinner />;
   }

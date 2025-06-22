@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.innovoltics.site/
+
+# Sitemaps
+Sitemap: https://www.innovoltics.site/sitemap.xml

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import STLViewer from "@/components/HomeModel";
+import { useProfile } from "@/hooks/Authhooks";
 
 const HomePage = () => {
+  
   return (
     <>
-      <div className="w-full h-full min-h-screen flex flex-col items-center justify-center font-poppins relative bg-white mb-10 pt-10 ">
+      <div className="w-full h-full min-h-screen flex flex-col items-center justify-center font-poppins relative bg-white  pt-10 ">
         {/* Cosmic Galaxy Background Gradient */}
         <div className="absolute lg:block hidden inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100"></div>
         <div className="absolute lg:hidden block inset-0 bg-gradient-to-br from-blue-900 via-purple-800 to-black z-0 opacity-100  "></div>
@@ -18,7 +20,7 @@ const HomePage = () => {
 
                     {/* Left Section: Text and Social Icons */}
           <div className="w-full lg:w-3/5 p-5 space-y-6">
-            <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold tracking-wider font-kanit text-gray-100">
+            <h1 className="text-2xl sm:text-3xl lg:text-6xl font-bold tracking-wider font-kanit text-gray-100">
               Bringing Your 3D Printing and Electronics Ideas to Life!
             </h1>
             <p className="text-xs sm:text-sm text-gray-300 text-justify">
@@ -79,7 +81,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mt-20 mb-20 relative">
+      {/* <section className="w-full py-24  font-poppins text-center lg:mb-20 lg:mt-20 mt-20 mb-20 relative">
 
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-wide mb-4">
@@ -94,7 +96,28 @@ const HomePage = () => {
             </button>
           </Link>
         </div>
-      </section>
+      </section> */}
+
+<section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-20 bg-white font-poppins">
+  {/* Left Side: Heading */}
+  <div className="flex-1">
+    <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 font-kanit">
+      Innovate with 3D Printing & Electronics
+    </h1>
+  </div>
+
+  {/* Right Side: Paragraph and Buttons */}
+  <div className="flex-1 mt-8 md:mt-0 md:pl-10">
+    <p className="text-sm md:text-base text-gray-700 mb-6 max-w-md ">
+      Explore custom 3D printing and electronic prototyping tailored for your ideas. Whether it’s product design, prototyping, or a unique build—our team makes it real.
+    </p>
+    <div className="flex gap-4">
+      {/* <button className="bg-purple-700 text-white px-5 py-2 text-sm rounded hover:bg-purple-800 transition">Learn More</button> */}
+      <button className="border border-purple-400 text-purple-800 px-5 py-2 text-sm rounded hover:bg-purple-700 hover:text-white transition">Tell Us Your Idea</button>
+    </div>
+  </div>
+</section>
+
     </>
   );
 };

@@ -2,8 +2,8 @@ import { FaHome, FaBox, FaShoppingCart, FaUsers, FaCube, FaEnvelope, FaChartLine
 
 export default function Sidebar({ setActiveTab, toggleTheme, darkMode }) {
   return (
-    <aside className="w-16 sm:w-64 bg-white dark:bg-gray-800 shadow-lg p-4 flex flex-col h-screen">
-      <h1 className="hidden sm:block text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-6">Innovoltics</h1>
+    <aside className="w-16 sm:w-64 bg-white dark:bg-gray-900 shadow-lg p-4 flex flex-col h-screen">
+      <h1 className="hidden sm:block text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400 mb-6 uppercase">Innovoltics</h1>
       <nav className="flex-1">
         <ul className="space-y-2">
           {[
@@ -12,7 +12,7 @@ export default function Sidebar({ setActiveTab, toggleTheme, darkMode }) {
             { icon: <FaShoppingCart />, label: 'Orders', value: 'orders' },
             // { icon: <FaUsers />, label: 'Users', value: 'users' },
             // { icon: <FaCube />, label: '3D Models', value: 'models' },
-            { icon: <FaEnvelope />, label: 'Messages', value: 'messages' },
+            { icon: <FaUsers />, label: 'Users', value: 'messages' },
             { icon: <FaUserPlus />, label: 'Add Admin', value: 'signup' },
             // { icon: <FaChartLine />, label: 'Analytics', value: 'analytics' },
           ].map((item) => (

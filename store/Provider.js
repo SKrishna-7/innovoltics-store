@@ -1,21 +1,22 @@
 'use client';
-import { ProductProvider } from './ProductContext';
-import { CartProvider } from './CartContext';
-import { OrderProvider } from './OrderContext';
-import { createContext } from 'react';
-const ProviderContext = createContext();
 
+import { UserProvider } from './UserContext';
+const ProviderContext = createContext();
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { createContext, useContext, useState } from "react";
+
+const queryClient = new QueryClient();
 export const Provider = ({ children }) => {
     return(
-        <OrderProvider>
-       <ProductProvider>
-        <CartProvider>
+        <QueryClientProvider client={queryClient}>
+            <UserProvider>
+       
                 <ProviderContext.Provider value={{}}>
                     {children}
                 </ProviderContext.Provider>
-        </CartProvider>
-       </ProductProvider>    
-       </OrderProvider>
+       
+       </UserProvider>
+        </QueryClientProvider>
     )
 };
 

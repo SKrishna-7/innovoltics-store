@@ -2,15 +2,16 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext } from "react";
-import { ProductContext } from "@/store/ProductContext";
 import { isValidUrl } from "@/utils/ValidURL";
 import { Spinner } from "@/components/Spinner";
+import { useProducts } from "@/hooks/productHooks";
 
 const FeaturedCardSection = () => {
-  const context = useContext(ProductContext);
 
-  if (!context) {
+  const { data: products = [] , isLoading:loading} = useProducts();
+
+
+  if (!products) {
     return (
       <div className="text-center py-10">
         <p className="text-2xl font-bold text-gray-900">No products found</p>
@@ -18,7 +19,6 @@ const FeaturedCardSection = () => {
     );
   }
 
-  const { products, loading } = context;
 
   if (loading) {
     return <Spinner />;

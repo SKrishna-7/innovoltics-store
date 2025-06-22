@@ -1,15 +1,13 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import axios from "axios";
-import { ProductContext } from "@/store/ProductContext";
 import { FaArrowLeft, FaTimes } from "react-icons/fa";
+import { useCreateProduct, useProductById, useUpdateProduct } from "@/hooks/productHooks";
+import { useUser } from "@/store/UserContext";
 
-// const API_BASE_URL = "http://localhost:8000/api";
-const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
 
 const EditProductPage = () => {
-  const { productById, error, fetchProductById, loading } = useContext(ProductContext);
+ 
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -31,35 +29,29 @@ const EditProductPage = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [uploadedData, setUploadedData] = useState(null);
   const router = useRouter();
-  const { product_id } = useParams();
-  const [token, setToken] = useState(null);
+
+  const  {product_id}  = useParams();
+
   const isEditMode = product_id !== "new";
+  const {data:productById , error} = useProductById( isEditMode ? product_id : null)
+
+  // const [productById,setProductById]=useState([])
+
   const [editError, setEditError] = useState(null);
+  // const [error, setError] = useState('');
+  const {user,token} = useUser();
+  const { mutateAsync: updateProduct, isLoading:loading } = useUpdateProduct(token);
+  const {mutateAsync: createProduct } = useCreateProduct(token)
+  var response;
 
-  // Check admin authentication and fetch product data
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("access_token");
-      setToken(token);
-      const role = localStorage.getItem("role");
-
-    // Redirect non-admins or unauthenticated users
-    if (!token || role !== "admin") {
-      setEditError("You must be an admin to edit products.");
-      router.push("/"); // Redirect to home
-      return;
-      }
-    }
-
-    setLoadingEdit(true);
-    if (isEditMode) {
-      fetchProductById(product_id); // Fetch product details
-    }
-    setLoadingEdit(false);
-  }, [product_id, isEditMode, router]);
-
-  // Update product state when productById changes
-  useEffect(() => {
+    
+    // if (product_id && product_id !== "new") {
+    //     const {data:productById , error} = useProductById(product_id)
+    //     setProductById(productById)
+    //     setError(error)
+    // }
+    
     if (productById && isEditMode) {
       setProduct({
         name: productById.name || "",
@@ -67,7 +59,7 @@ const EditProductPage = () => {
         price: productById.price?.toString() || "",
         quantity: productById.quantity?.toString() || "",
         category: productById.category?.length ? productById.category : [""],
-        image: [], // Files need re-upload
+        image: productById.image?.length ? productById.image : [],
         diameter: productById.diameter?.length ? productById.diameter.map(String) : [""],
         materials: productById.materials?.length
           ? productById.materials
@@ -86,6 +78,7 @@ const EditProductPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
+    // console.log(name)
   };
 
   // Handle array field changes
@@ -100,7 +93,7 @@ const EditProductPage = () => {
   // Handle file uploads
   const handleFileChange = (field, e) => {
     const files = Array.from(e.target.files);
-    console.log(files)
+    // console.log(files)
     setProduct((prev) => ({ ...prev, [field]: [...prev[field], ...files] }));
   };
 
@@ -178,6 +171,9 @@ const EditProductPage = () => {
     setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
+
+ 
+  
   const handleReset = () => {
     if (isEditMode && productById) {
       setProduct({
@@ -186,7 +182,7 @@ const EditProductPage = () => {
         price: productById.price?.toString() || "",
         quantity: productById.quantity?.toString() || "",
         category: productById.category?.length ? productById.category : [""],
-        image: [],
+        image: productById.image?.length ? productById.image : [],
         diameter: productById.diameter?.length ? productById.diameter.map(String) : [""],
         materials: productById.materials?.length
           ? productById.materials
@@ -216,19 +212,9 @@ const EditProductPage = () => {
     setUploadedData(null);
   };
 
+  // console.log(product.image)
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // const token = localStorage.getItem("access_token");
-    // const role = localStorage.getItem("role");
-
-    // // Double-check admin role before submission
-    // if (!token || role !== "admin") {
-    //   setEditError("You must be an admin to edit products.");
-    //   router.push("/");
-    //   return;
-    // }
-
     try {
       const formData = new FormData();
       formData.append("name", product.name);
@@ -236,7 +222,15 @@ const EditProductPage = () => {
       formData.append("price", parseFloat(product.price) || 0);
       formData.append("quantity", parseInt(product.quantity, 10) || 0);
       formData.append("category", JSON.stringify(product.category.filter(Boolean)));
-      product.image.forEach((file) => formData.append("image", file));
+      const existingImageUrls = product.image.filter((img) => typeof img === "string");
+    formData.append("existing_images", JSON.stringify(existingImageUrls));
+
+    // 🆕 New image uploads
+    product.image.forEach((img) => {
+      if (img instanceof File) {
+        formData.append("image", img);
+      }
+    });
       formData.append("diameter", JSON.stringify(product.diameter.filter(Boolean).map(Number)));
       formData.append(
         "materials",
@@ -244,9 +238,9 @@ const EditProductPage = () => {
           product.materials.map((m) => ({
             name: m.name,
             inStock: m.inStock,
-            price: parseFloat(m.price) || 0,
+            price: Math.max(parseFloat(m.price) || 0, 0.01),
             color: m.color.filter(Boolean),
-          }))
+          })) || ''
         )
       );
       formData.append("inStock", String(product.inStock));
@@ -256,68 +250,74 @@ const EditProductPage = () => {
           product.model_type.map((mt) => ({
             name: mt.name,
             inStock: mt.inStock,
-            price: parseFloat(mt.price) || 0,
-          }))
+            price: Math.max(parseFloat(mt.price) || 0, 0.01),
+          }) || "")
         )
       );
-      product.model_3d.forEach((file) => formData.append("model_3d", file));
+      product.model_3d.forEach((file) => formData.append("model_3d", file) || "");
       formData.append("requirements",product.requirements || "");
-      console.log(formData)
-      console.log(product.model_3d)
-      let response;
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`, // Include admin token
-      };
+      // console.log(formData)
+      // console.log(product.model_3d)
+      
+      setUploadedData(formData)
+      setShowConfirmation(true);
 
-      if (isEditMode) {
-        setLoadingEdit(true);
-        response = await axios
-          .put(`${BASE_URL}/products/${product_id}`, formData, { headers })
-          .catch((err) => {
-            console.error("Update error:", err);
-            const errorMsg =
-              err.response?.status === 403
-                ? "Unauthorized: Admin access required."
-                : err.response?.data?.detail || "Failed to update product. Please try again.";
-            setEditError(errorMsg);
-          })
-          .finally(() => setLoadingEdit(false));
-      } else {
-        setLoadingEdit(true);
-        response = await axios
-          .post(`${BASE_URL}/products`, formData, { headers })
-          .catch((err) => {
-            console.error("Create error:", err);
-            const errorMsg =
-              err.response?.status === 403
-                ? "Unauthorized: Admin access required."
-                : err.response?.data?.detail || "Failed to save product. Please try again.";
-            setEditError(errorMsg);
-          })
-          .finally(() => setLoadingEdit(false));
-      }
-
-      if (response) {
-        setUploadedData(response.data.product);
-        setShowConfirmation(true);
-        setEditError(null); // Clear any previous errors on success
-      }
     } catch (err) {
-      console.error("Error submitting form:", err);
+      // console.error("Error submitting form:", err);
       setEditError("An unexpected error occurred. Please try again.");
     }
   };
 
-  const confirmSubmission = () => {
-    setShowConfirmation(false);
-    if (!isEditMode) {
-      handleReset();
-      router.push("/products");
-    } else {
-      router.push(`/admin`);
+  
+  useEffect(() => {
+    return () => {
+      product.image.forEach((img) => {
+        if (img instanceof File) {
+          URL.revokeObjectURL(img);
+        }
+      });
+    };
+  }, [product.image]);
+
+  const confirmSubmission = async () => {
+
+    if (!uploadedData) return;
+
+    // console.log(uploadedData)
+    setLoadingEdit(true);
+    setEditError(null);
+  
+    try {
+      let response;
+  
+      if (isEditMode) {
+        response = await updateProduct({ product_id, formData: uploadedData, token });
+      } else {
+        response = await createProduct({ formData: uploadedData, token });
+      }
+      // console.log(response)
+      if (response?.product) {
+        setUploadedData(response.product);
+        setUploadedData(null);
+        setShowConfirmation(false);
+        if (isEditMode){
+          alert(`Product Edited Successfully..`)
+          router.push("/admin");
+        }
+        alert("Product Added Successfully...")
+      } else {
+        throw new Error("No product returned from server.");
+      }
+  
+    } catch (err) {
+      // console.error("Error submitting product:", err);
+      const msg = err?.response?.data?.detail || err.message || "Submission failed.";
+      setEditError(msg);
+    } finally {
+      setLoadingEdit(false);
     }
   };
+  
 
   if (loading && isEditMode) {
     return (
@@ -342,7 +342,7 @@ const EditProductPage = () => {
       </div>
     );
   }
-
+  console.log(product)
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans mt-10">
       <div className="max-w-5xl mx-auto">
@@ -356,13 +356,14 @@ const EditProductPage = () => {
 
         {/* Header */}
         <header className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
             {isEditMode ? `Edit Product: ${product.name || "Loading..."}` : "Add New Product"}
           </h1>
           <p className="mt-2 text-lg text-gray-600">
             {isEditMode ? "Update the product details below" : "Create a new product listing"}
           </p>
         </header>
+        {error && <p className="text-red-600">{error.message || "Something went wrong"}</p>}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 space-y-10">
@@ -437,7 +438,7 @@ const EditProductPage = () => {
           {/* Categories */}
           <section>
             <h2 className="text-2xl font-semibold text-zinc-700 mb-4">Categories</h2>
-            {product.category.map((cat, index) => (
+            {Array.isArray(product.category) && product.category.map((cat, index) => (
               <div key={index} className="flex items-center gap-4 mt-2">
                 <input
                   type="text"
@@ -483,22 +484,34 @@ const EditProductPage = () => {
                 </ul>
               </div>
             )}
-            {product.image.length > 0 && (
-              <ul className="space-y-2 mb-4">
-                {product.image.map((file, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 truncate w-64">{file.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeFile("image", index)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <FaTimes />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+           {product.image?.length > 0 && (
+  <ul className="space-y-2 mb-4">
+    {product.image.map((file, index) => {
+      if (!(file instanceof File) && typeof file !== 'string') return null; // guard bad cases
+
+      return (
+        <li key={index} className="flex items-center gap-3">
+          <img
+            src={file instanceof File ? URL.createObjectURL(file) : file}
+            alt={`Preview ${index}`}
+            className="w-16 h-16 object-cover rounded border"
+          />
+          <span className="text-sm text-gray-600 truncate w-64">
+            {file instanceof File ? file.name : file.split('/').pop()}
+          </span>
+          <button
+            type="button"
+            onClick={() => removeFile("image", index)}
+            className="text-red-600 hover:text-red-800"
+          >
+            <FaTimes />
+          </button>
+        </li>
+      );
+    })}
+  </ul>
+)}
+
             <input
               type="file"
               multiple
@@ -517,7 +530,7 @@ const EditProductPage = () => {
                   type="number"
                   value={dia}
                   onChange={(e) => handleArrayChange("diameter", index, e.target.value)}
-                  min="0"
+                  
                   placeholder="e.g., 19"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-zinc-500 focus:border-zinc-500 shadow-sm transition duration-150"
                 />
@@ -575,7 +588,6 @@ const EditProductPage = () => {
                           value={material.price}
                           onChange={(e) => handleNestedChange("materials", index, "price", e.target.value)}
                           step="0.01"
-                          min="0"
                           placeholder="e.g., 2.00"
                           className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:ring-zinc-500 focus:border-zinc-500 shadow-sm transition duration-150"
                         />
@@ -675,8 +687,7 @@ const EditProductPage = () => {
                           type="number"
                           value={model.price}
                           onChange={(e) => handleNestedChange("model_type", index, "price", e.target.value)}
-                          step="0.01"
-                          min="0"
+                          step="0.5"
                           placeholder="e.g., 23.00"
                           className="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:ring-zinc-500 focus:border-zinc-500 shadow-sm transition duration-150"
                         />
@@ -730,22 +741,25 @@ const EditProductPage = () => {
                 </ul>
               </div>
             )}
-            {product.model_3d.length > 0 && (
-              <ul className="space-y-2 mb-4">
-                {product.model_3d.map((file, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 truncate w-64">{file.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeFile("model_3d", index)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <FaTimes />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+           {product.model_3d.length > 0 && (
+  <ul className="space-y-2 mb-4">
+    {product.model_3d.map((file, index) => (
+      <li key={index} className="flex items-center gap-2">
+        <span className="text-sm text-gray-600 truncate w-64">
+          {file instanceof File ? file.name : (typeof file === 'string' ? file.split('/').pop() : 'Unknown File')}
+        </span>
+        <button
+          type="button"
+          onClick={() => removeFile("model_3d", index)}
+          className="text-red-600 hover:text-red-800"
+        >
+          <FaTimes />
+        </button>
+      </li>
+    ))}
+  </ul>
+)}
+
             <input
               type="file"
               multiple
@@ -791,7 +805,7 @@ const EditProductPage = () => {
         </form>
 
         {/* Confirmation Modal */}
-        {showConfirmation && uploadedData && (
+        {showConfirmation && product && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-xl">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -799,54 +813,62 @@ const EditProductPage = () => {
               </h2>
               <div className="space-y-4 text-gray-700">
                 <p>
-                  <strong className="font-medium text-gray-900">Name:</strong> {uploadedData.name}
+                  <strong className="font-medium text-gray-900">Name:</strong> {product.name}
                 </p>
                 <p>
                   <strong className="font-medium text-gray-900">Description:</strong>{" "}
-                  {uploadedData.description || "N/A"}
+                  {product.description || "N/A"}
                 </p>
                 <p>
                   <strong className="font-medium text-gray-900">Price:</strong> ₹
-                  {uploadedData.price.toFixed(2)}
+                  {Number(product.price).toFixed(2)}
                 </p>
                 <p>
-                  <strong className="font-medium text-gray-900">Quantity:</strong> {uploadedData.quantity}
+                  <strong className="font-medium text-gray-900">Quantity:</strong> {product.quantity}
                 </p>
                 <p>
                   <strong className="font-medium text-gray-900">In Stock:</strong>{" "}
-                  {uploadedData.inStock ? "Yes" : "No"}
+                  {product.inStock ? "Yes" : "No"}
                 </p>
                 <p>
                   <strong className="font-medium text-gray-900">Categories:</strong>{" "}
-                  {uploadedData.category.join(", ")}
+                  {product.category?.join(", ")}
                 </p>
                 <div>
                   <strong className="font-medium text-gray-900">Images:</strong>
                   <ul className="list-disc pl-5 space-y-1">
-                    {uploadedData.image.map((url, i) => (
-                      <li key={i}>
-                        <a
-                          href={url}
-                          target="_blank"
-                          className="text-zinc-600 hover:underline truncate block"
-                        >
-                          {url}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+  {Array.isArray(product.image) &&
+    product.image.map((item, i) => (
+      <li key={i}>
+        {typeof item === "string" ? (
+          <a
+            href={item}
+            target="_blank"
+            className="text-zinc-600 hover:underline truncate block"
+          >
+            {item}
+          </a>
+        ) : item instanceof File ? (
+          <span className="text-zinc-600 truncate block">
+            {item.name}
+          </span>
+        ) : null}
+      </li>
+    ))}
+</ul>
+
                 </div>
                 <p>
                   <strong className="font-medium text-gray-900">Diameters:</strong>{" "}
-                  {uploadedData.diameter.join(", ")} mm
+                  {uploadedData.diameter?.join(", ")} mm
                 </p>
                 <div>
                   <strong className="font-medium text-gray-900">Materials:</strong>
                   <ul className="list-disc pl-5 space-y-1">
-                    {uploadedData.materials.map((m, i) => (
+                    {Array.isArray(uploadedData.materials) && uploadedData.materials.map((m, i) => (
                       <li key={i}>
-                        {m.name} - ₹{m.price.toFixed(2)}, In Stock: {m.inStock ? "Yes" : "No"}, Colors:{" "}
-                        {m.color.join(", ")}
+                        {m.name} - ₹{m.price?.toFixed(2)}, In Stock: {m.inStock ? "Yes" : "No"}, Colors:{" "}
+                        {m.color?.join(", ")}
                       </li>
                     ))}
                   </ul>
@@ -854,9 +876,9 @@ const EditProductPage = () => {
                 <div>
                   <strong className="font-medium text-gray-900">Model Types:</strong>
                   <ul className="list-disc pl-5 space-y-1">
-                    {uploadedData.model_type.map((m, i) => (
+                    {Array.isArray(uploadedData.model_type) && uploadedData.model_type.map((m, i) => (
                       <li key={i}>
-                        {m.name} - ₹{m.price.toFixed(2)}, In Stock: {m.inStock ? "Yes" : "No"}
+                        {m.name} - ₹{m.price?.toFixed(2)}, In Stock: {m.inStock ? "Yes" : "No"}
                       </li>
                     ))}
                   </ul>
@@ -864,7 +886,7 @@ const EditProductPage = () => {
                 <div>
                   <strong className="font-medium text-gray-900">3D Models:</strong>
                   <ul className="list-disc pl-5 space-y-1">
-                    {uploadedData.model_3d.map((url, i) => (
+                    {Array.isArray(uploadedData.model_3d) && uploadedData.model_3d.map((url, i) => (
                       <li key={i}>
                         <a
                           href={url}
@@ -890,7 +912,13 @@ const EditProductPage = () => {
                   className="px-4 py-2 bg-zinc-600 text-white rounded-lg hover:bg-zinc-700 transition duration-200 shadow-md disabled:opacity-50"
                   disabled={loading}
                 >
-                  {loading ? "Confirming..." : "Confirm"}
+                 {loadingEdit
+                ? isEditMode
+                  ? "Updating..."
+                  : "Adding..."
+                : isEditMode
+                ? "Update Product"
+                : "Add Product"}
                 </button>
               </div>
             </div>
