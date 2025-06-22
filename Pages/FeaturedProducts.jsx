@@ -8,8 +8,11 @@ import { useProducts } from "@/hooks/productHooks";
 
 const FeaturedCardSection = () => {
 
-  const { data: products = [] , isLoading:loading} = useProducts();
+  const { data: products = [], isLoading: loading } = useProducts({
+    enabled: typeof window !== 'undefined', 
+  });
 
+  console.log(products)
 
   if (!products) {
     return (
@@ -57,6 +60,9 @@ const FeaturedCardSection = () => {
                 }
                 fill
                 className="object-cover rounded-t-xl"
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+
               />
             </div>
 

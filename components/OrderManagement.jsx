@@ -2,7 +2,7 @@
 
 import { FaSync, FaCog, FaTimes, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useAllOrders, useDeleteOrder } from "@/hooks/Orderhooks";
+import { useAllOrders, useDeleteOrder } from "@/hooks/orderhooks";
 import { useUser } from "@/store/UserContext";
 
 

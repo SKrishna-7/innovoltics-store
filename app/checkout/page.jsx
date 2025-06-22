@@ -8,13 +8,12 @@ import { useRouter } from "next/navigation";
 import { useCart, useAddToCart, useRemoveFromCart, useUpdateCart } from "@/hooks/Carthooks";
 import { useUser } from '@/store/UserContext';
 
-import { usePlaceOrder } from "@/hooks/orderHooks"; 
+import { usePlaceOrder } from "@/hooks/orderhooks"; 
 import { FaCheckCircle } from "react-icons/fa";
 
 const OrderOverview = () => {
 
   
-  // const token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXJlc2hrcmlzaG5hMzc1QGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzUwNjA0MDcyfQ.SEPt-B0buDUXe-WYCvOrEwmzLGhnoPKlnbDcMSjWuwc'
   const { user ,token, isLoading: userLoading } = useUser();
   const { mutate: placeOrder, isLoading: isPlacing } = usePlaceOrder(token);
 

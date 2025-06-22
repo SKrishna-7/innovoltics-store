@@ -4,7 +4,11 @@ import axios from 'axios';
 
 const BASE_URL = 'https://innovoltics-3dprinters.onrender.com/api';
 
-export const useProducts = () => {
+export const useProducts = (options={}) => {
+  if (typeof window === 'undefined') {
+    return { data: [], isLoading: false }; // SSR-safe fallback
+  }
+
     return useQuery({
       queryKey: ["products"],
       queryFn: async () => {
@@ -12,6 +16,7 @@ export const useProducts = () => {
         return res.data;
       },
       staleTime: 5 * 60 * 1000, // optional caching
+      ...options,
     });
   };
 // Fetch product by ID

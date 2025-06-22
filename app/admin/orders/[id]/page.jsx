@@ -7,7 +7,7 @@ import {
   useOrderById,
   useUpdateOrderStatus,
   useDeleteOrder,
-} from "@/hooks/Orderhooks"; 
+} from "@/hooks/orderhooks"; 
 
 export default function OrderDetails() {
   const [OrderError, setOrderError] = useState(null);

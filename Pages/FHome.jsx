@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import STLViewer from "@/components/HomeModel";
-import { useProfile } from "@/hooks/Authhooks";
 
 const HomePage = () => {
   

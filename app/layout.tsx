@@ -1,17 +1,18 @@
+// app/layout.tsx
 import type { Metadata } from 'next'
 import './globals.css'
-
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Navbar from '../components/Navbar'
+import Footer from '@/components/Footer'
+import ClientProviders from './Clientprovider'
 
 export const metadata: Metadata = {
   title: 'Innovoltics',
-  description: '3d printing and Electronic Prototypes'  ,
+  description: '3D printing and Electronic Prototypes',
+  icons: {
+    icon: '/images/favicon.ico',
+  },
 }
-
-import Navbar from '../components/Navbar'
-import Footer from '@/components/Footer'
-import {Provider} from '@/store/Provider'
-
 
 export default function RootLayout({
   children,
@@ -20,14 +21,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <link rel="icon" href="images/favicon.ico" />
       <body>
-       <Provider>
-         <Navbar />
-           {children}
-           <SpeedInsights />
-         <Footer/>
-        </Provider> 
+        <ClientProviders>
+          <Navbar />
+          {children}
+          <SpeedInsights />
+          <Footer />
+        </ClientProviders>
       </body>
     </html>
   )
