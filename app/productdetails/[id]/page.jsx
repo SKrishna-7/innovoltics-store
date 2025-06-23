@@ -15,8 +15,7 @@ export default function ProductDetails() {
   const { data: productById, isLoading, error } = useProductById(id, !!id);
   const { data: products = [] } = useProducts();
 
-  const { mutateAsync: addToCart } = useAddToCart(token);
-
+  const { mutateAsync: addToCart} = useAddToCart(token);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
@@ -29,6 +28,7 @@ export default function ProductDetails() {
   const [displayPrice, setDisplayPrice] = useState(0);
   const [viewerMode, setViewerMode] = useState(productById?.image?.[0]);
 
+  const [loading,setLoading]= useState(false)
 // console.log(productById)
   useEffect(() => {
     if (productById) {
@@ -87,13 +87,15 @@ export default function ProductDetails() {
       material: selectedMaterial.name || null,
       color: selectedColor || null,
       category: selectedModel.name || null,
-      price: displayPrice || productById.price,
+      price: productById?.price,
       diameter: customDiameter || selectedDiameter || 0,
       quantity: 1,
     };
     // console.log(cartItem)
     try{
+      setLoading(true)
       await addToCart(cartItem);
+      setLoading(false)
       setCartMessage(`Added ${productById?.name} to cart!`);
       setIsModalOpen(true);
       setTimeout(() => setIsModalOpen(false), 3000);
@@ -113,7 +115,7 @@ export default function ProductDetails() {
   if (isLoading) return <Spinner />;
   if (error) return <p className='mt-10'>Error loading product</p>;
 
-// console.log(relatedProducts)
+console.log(selectedMaterial?.color)
   return (
     <div className="w-full min-h-screen bg-white font-poppins mt-20">
       <div className="pt-6">
@@ -208,7 +210,9 @@ export default function ProductDetails() {
               )}
             <form className="mt-8" onSubmit={handleAddToCart}>
               {/* Colors */}
-              <div>
+
+              {selectedMaterial && selectedMaterial?.color >= 1 ? 
+                <div>
                 <h3 className="text-sm font-medium text-gray-900">Colors Available for  { selectedMaterial?.name }</h3>
                 <div className="mt-4 flex items-center gap-x-3">
                   {selectedMaterial?.color?.map((color) => (
@@ -229,6 +233,11 @@ export default function ProductDetails() {
                 </div>
               </div>
 
+                    :(
+                      <></>
+                    )
+}
+            
              
               {/* Materials */}
               {productById?.materials?.some((m) => m?.name && m?.price > 0) && (
@@ -363,7 +372,7 @@ export default function ProductDetails() {
                 type="submit"
                 className="mt-8 flex w-full items-center justify-center rounded-md bg-purple-600 px-8 py-3 text-base font-medium text-white hover:bg-purple-700 transition-colors duration-300"
               >
-                Add to Cart
+                {loading ? "Adding..." : "Add to Cart"}
               </button>
             </form>
           </div>

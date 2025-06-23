@@ -19,10 +19,12 @@ const OrderOverview = () => {
 
   const { data, isLoading } = useCart(token);
   const cart = data?.cart_items || [];
-  const { mutate: addToCart } = useAddToCart(token);
-  const { mutate: removeFromCart } = useRemoveFromCart(token);
+
+
+  const { mutate: removeFromCart,isSuccess ,isPending} = useRemoveFromCart(token);
+  console.log(isPending)
   const { mutate: updateCart } = useUpdateCart(token);
-  // console.log(cart)    
+  console.log(cart)    
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [isLoading, setIsLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -95,7 +97,7 @@ const OrderOverview = () => {
       total_price: total,
     };
     
-    // console.log(orderPayload)
+    console.log(orderPayload)
     setOrderError(null); // Clear previous errors
   
     placeOrder(orderPayload, {
@@ -107,7 +109,7 @@ const OrderOverview = () => {
         // Optional: redirect or clear form/cart
       },
       onError: (err) => {
-        setOrderError(err.message || "Failed to place order");
+        setOrderError("Failed to place order");
       },
     });
   };
@@ -172,7 +174,7 @@ const OrderOverview = () => {
                       
                       <div
                         key={item?.product_id}
-                        className="flex items-center bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors"
+                        className={`flex items-center bg-gray-50  rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors`}
                       >
                       
                         <div className="flex-1">
@@ -200,18 +202,19 @@ const OrderOverview = () => {
                             <button
                               onClick={() => removeFromCart(item?.product_id)}
                               className="ml-4 text-red-600 hover:text-red-800 transition-colors"
+                              disabled={isPending}
                             >
                               <TrashIcon className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
-                        <p className="text-gray-900 font-semibold">${item?.price.toFixed(2)}</p>
+                        <p className="text-gray-900 font-semibold">₹{item?.price.toFixed(2)}</p>
                       </div>
                     ))}
                   </div>
                   <div className="mt-6 border-t pt-4 flex justify-between text-lg font-semibold text-gray-900">
                     <span>Total</span>
-                    <span>${total}</span>
+                    <span>₹{total}</span>
                   </div>
 
                     <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-lg shadow-sm text-sm">
