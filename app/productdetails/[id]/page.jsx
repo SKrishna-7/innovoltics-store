@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
-import STLViewer from '@/components/HomeModel';
 import { Spinner } from '@/components/Spinner';
 import {useProductById , useProducts} from '@/hooks/productHooks'
 import { useCart, useAddToCart, useRemoveFromCart, useUpdateCart } from "@/hooks/Carthooks";
@@ -111,8 +110,8 @@ export default function ProductDetails() {
     setCartMessage("");
   };
 
-  if (isLoading) return <p>Loading product...</p>;
-  if (error) return <p>Error loading product</p>;
+  if (isLoading) return <Spinner />;
+  if (error) return <p className='mt-10'>Error loading product</p>;
 
 // console.log(relatedProducts)
   return (
@@ -202,7 +201,7 @@ export default function ProductDetails() {
             }
                 </div> */}
               {productById?.materials?.some((m) => m?.name && m?.price > 0) ? (
-            <p className="mt-4 text-2xl sm:text-3xl font-semibold text-gray-900">₹{displayPrice}</p>
+            <p className="mt-4 text-2xl sm:text-3xl font-semibold text-gray-900">₹{productById?.price}</p>
               ): (
                   <p className="mt-4 text-2xl sm:text-3xl font-semibold text-gray-900">₹{productById?.price}</p>
 
